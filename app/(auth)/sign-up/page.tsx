@@ -30,28 +30,28 @@ const Page = () => {
 
   const router = useRouter()
 
-  const { mutate, isLoading } = trpc.auth.createPayloadUser.useMutation({
-    onError: (err) => {
-      if (err.data?.code === "CONFLICT") {
-        toast.error("This email is already in use. Sign in instead?")
-      }
+  // const { mutate, isLoading } = trpc.auth.createPayloadUser.useMutation({
+  //   onError: (err) => {
+  //     if (err.data?.code === "CONFLICT") {
+  //       toast.error("This email is already in use. Sign in instead?")
+  //     }
 
-      if (err instanceof ZodError) {
-        toast.error(err.issues[0].message)
+  //     if (err instanceof ZodError) {
+  //       toast.error(err.issues[0].message)
 
-        return
-      }
-      toast.error("Something went wrong. Please try again or contact support.")
-    },
-    onSuccess: ({ sentToEmail }) => {
-      toast.success(`Verification email sent to ${sentToEmail}.`)
-      router.push("/verify-email?to=" + sentToEmail)
-    },
-  })
+  //       return
+  //     }
+  //     toast.error("Something went wrong. Please try again or contact support.")
+  //   },
+  //   onSuccess: ({ sentToEmail }) => {
+  //     toast.success(`Verification email sent to ${sentToEmail}.`)
+  //     router.push("/verify-email?to=" + sentToEmail)
+  //   },
+  // })
 
-  const onSubmit = ({ email, password }: TAuthCredentialsValidator) => {
-    mutate({ email, password })
-  }
+  // const onSubmit = ({ email, password }: TAuthCredentialsValidator) => {
+  //   mutate({ email, password })
+  // }
 
   return (
     <>
@@ -73,42 +73,40 @@ const Page = () => {
           </div>
 
           <div className="grid gap-6">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="grid gap-2">
-                <div className="grid gap-1 py-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    {...register("email")}
-                    className={cn({
-                      "focus-visible:ring-red-500": errors.email,
-                    })}
-                    placeholder="email@example.com"
-                  />
-                  {errors?.email && (
-                    <p className="text-sm text-red-500">
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
-                <div className="grid gap-1 py-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    type="password"
-                    {...register("password")}
-                    className={cn({
-                      "focus-visible:ring-red-500": errors.password,
-                    })}
-                    placeholder="Password"
-                  />
-                  {errors?.password && (
-                    <p className="text-sm text-red-500">
-                      {errors.password.message}
-                    </p>
-                  )}
-                </div>
-                <Button>Sign up</Button>
+            {/* <form onSubmit={handleSubmit(onSubmit)}> */}
+            <div className="grid gap-2">
+              <div className="grid gap-1 py-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  {...register("email")}
+                  className={cn({
+                    "focus-visible:ring-red-500": errors.email,
+                  })}
+                  placeholder="email@example.com"
+                />
+                {errors?.email && (
+                  <p className="text-sm text-red-500">{errors.email.message}</p>
+                )}
               </div>
-            </form>
+              <div className="grid gap-1 py-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  type="password"
+                  {...register("password")}
+                  className={cn({
+                    "focus-visible:ring-red-500": errors.password,
+                  })}
+                  placeholder="Password"
+                />
+                {errors?.password && (
+                  <p className="text-sm text-red-500">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+              <Button>Sign up</Button>
+            </div>
+            {/* </form> */}
           </div>
         </div>
       </div>

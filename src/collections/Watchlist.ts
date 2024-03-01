@@ -1,25 +1,10 @@
 import { CollectionConfig, Access } from "payload/types"
 
-const watchlistAccess: Access = ({ req }) => {
-  // Adjust the access control logic based on your requirements
-  return req.user !== undefined // Only authenticated users can access watchlists
-}
-
 export const Watchlists: CollectionConfig = {
   slug: "watchlists",
-  auth: {
-    verify: {},
-  },
-  access: {
-    read: watchlistAccess,
-    create: watchlistAccess,
-    update: watchlistAccess,
-    delete: watchlistAccess,
-  },
-  admin: {
-    // Define admin interface settings as needed
-    defaultColumns: ["id"],
-  },
+  auth: {},
+  access: {},
+  admin: {},
   fields: [
     {
       name: "title",

@@ -1,53 +1,56 @@
-import React, { useState } from "react"
-import { fetchAnime } from "../app/action"
+import React from "react"
+import WatchAnime from "./WatchAnime"
+import { useState } from "react"
 
-const MAX_LIMIT = 8
+const SearchBar = (props: any) => {
+  const [animeList, setAnimeList] = useState([])
+  const [watchlist, setWatchlist] = useState([])
 
-interface Anime {
-  id: number
-  title: string
-  // Add more properties if needed
-}
-
-interface SearchBarProps {
-  onSearch: (results: Anime[]) => void
-}
-
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
-  const [searchTerm, setSearchTerm] = useState<string>("")
-
-  const handleSearch = async () => {
-    try {
-      // Fetch anime data based on the search term
-      const response = await fetchAnime(1) // Assuming you always start from page 1
-      const results: Anime[] = response.animes // Adjust according to the structure of the response
-
-      // Pass the results to the parent component
-      onSearch(results)
-    } catch (error) {
-      console.error("Error searching for anime:", error)
-    }
+  const handleSubmit = (e: any) => {
+    e.preventDefault()
+    props.HandleSearch(e)
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value)
+  // State variable to control the visibility of WatchAnime component
+  const [isWatchAnimeVisible, setIsWatchAnimeVisible] = React.useState(true)
+
+  const hideWatchAnime = () => {
+    setIsWatchAnimeVisible(false)
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    handleSearch()
+  const showWatchAnime = () => {
+    setIsWatchAnimeVisible(true)
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        placeholder="Search for anime..."
-        value={searchTerm}
-        onChange={handleChange}
-      />
-      <button type="submit">Search</button>
-    </form>
+    <>
+      <div className="flex">
+        <div className="ml-auto">
+          <form onSubmit={handleSubmit}>
+            <input
+              className="pl-2 rounded-md bg-slate-500 text-white"
+              placeholder="Search for an anime... "
+              required
+              value={props.search}
+              onChange={(e) => props.setSearch(e.target.value)}
+              onFocus={showWatchAnime} // Show WatchAnime when input is focused
+            />
+          </form>
+        </div>
+      </div>
+
+      <div className="text-white">
+        {isWatchAnimeVisible &&
+          props.animeList.map((anime: any, index: number) => (
+            <div
+              key={anime.title}
+              className="w-[400px] bg-black rounded-md hover:bg-slate-400 flex ml-auto -mr-20"
+            >
+              <WatchAnime anime={anime} onHide={hideWatchAnime} />
+            </div>
+          ))}
+      </div>
+    </>
   )
 }
 

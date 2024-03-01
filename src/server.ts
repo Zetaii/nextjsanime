@@ -11,9 +11,31 @@ import nextBuild from "next/dist/build"
 import path from "path"
 import { PayloadRequest } from "payload/types"
 import { parse } from "url"
+import router from "./app/watchlistRoutes"
+import mongoose from "mongoose"
+import dotenv from "dotenv"
+import WatchlistModel from "./collections/WatchlistItem"
 
-const app = express()
+dotenv.config()
 const PORT = Number(process.env.PORT) || 3000
+const app = express()
+
+app.use(express.json())
+
+const db = mongoose
+  .connect(process.env.MONGODB_URL as string)
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((error) => console.log("MongoDB connection error:", error))
+
+app.post("/watchlistitems", async (req, res) => {
+  console.log(req.body)
+  const newWatchlistItem = new WatchlistModel({
+    user: req.body.user,
+    anime: req.body.anime,
+  })
+  const createdWatchlist = await newWatchlistItem.save()
+  res.json(createdWatchlist)
+})
 
 const createContext = ({
   req,

@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express"
 import WatchlistModel from "../collections/WatchlistItem"
 
-const router = express.Router()
+const watchlistRouter = express.Router()
 
 // Endpoint to add an anime to the user's watchlist
-router.post("/watchlist/add", async (req: Request, res: Response) => {
+watchlistRouter.post("/add", async (req: Request, res: Response) => {
   try {
     const { userId, animeId, title, imageUrl } = req.body
 
@@ -30,7 +30,7 @@ router.post("/watchlist/add", async (req: Request, res: Response) => {
 })
 
 // Endpoint to remove an anime from the user's watchlist
-router.post("/watchlist/remove", async (req: Request, res: Response) => {
+watchlistRouter.post("/remove", async (req: Request, res: Response) => {
   try {
     const { watchlistItemId } = req.body
 
@@ -50,7 +50,7 @@ router.post("/watchlist/remove", async (req: Request, res: Response) => {
 })
 
 // Endpoint to retrieve the user's entire watchlist
-router.get("/watchlist", async (req: Request, res: Response) => {
+watchlistRouter.get("/", async (req: Request, res: Response) => {
   try {
     // Retrieve all watchlist items from the database
     const watchlistItems = await WatchlistModel.find()
@@ -62,4 +62,4 @@ router.get("/watchlist", async (req: Request, res: Response) => {
   }
 })
 
-export default router
+export default watchlistRouter

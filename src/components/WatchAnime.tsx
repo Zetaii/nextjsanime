@@ -12,41 +12,65 @@ const WatchAnime: React.FC<WatchAnimeProps> = ({ anime, onHide }) => {
 
   // Function to determine if an element should be ignored
   const shouldIgnore = (target: HTMLElement): boolean => {
-    // Ignore clicks outside the WatchAnime component
-    return !target.closest(".WatchAnime")
+    // Ignore clicks on elements with the class name .WatchAnime
+    if (target.closest(".WatchAnime")) {
+      return false
+    }
+
+    return true
+  }
+
+  const addToWatchlist = async () => {
+    try {
+      const response = await fetch("/add-to-watchlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: anime.title,
+          imageUrl: anime.images.jpg.large_image_url,
+          episodes: anime.episodes,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to add anime to watchlist")
+      }
+
+      const data = await response.json()
+      console.log("Response:", data)
+      // Handle success
+    } catch (error) {
+      console.error("Error adding anime to watchlist:", error)
+      // Handle error
+    }
   }
 
   // Pass shouldIgnore function to useOnClickOutside hook
   useOnClickOutside(animeRef, onHide, shouldIgnore)
 
-  // Function to add anime title to the watchlist
-  const addToWatchlist = () => {
-    const animeList = document.createElement("h1")
-    animeList.classList.add("text-white")
-    animeList.textContent = anime.title
-
-    document.body.appendChild(animeList)
-  }
-
   return (
-    <div ref={animeRef} className="WatchAnime flex text-white ">
-      <div className="ml-auto">
-        <a href={anime.url} className="flex gap-2 m-2">
-          <div className="relative w-[144px] h-[144px]">
-            <Image
-              src={anime.images.jpg.large_image_url}
-              alt="Anime image"
-              fill
-            />
-          </div>
-          <h3 className="w-[250px]">{anime.title}</h3>
-        </a>
-        <button
-          className="bg-red-300 hover:bg-blue-300"
-          onClick={addToWatchlist} // Call the addToWatchlist function when the button is clicked
-        >
-          Add To Watchlist
-        </button>
+    <div className="WatchAnime flex text-white rounded">
+      <div ref={animeRef} className="flex gap-2 m-2">
+        <div className="relative w-[120px] h-[144px]">
+          <Image
+            src={anime.images.jpg.large_image_url}
+            alt="Anime image"
+            fill
+          />
+        </div>
+        <div className="flex flex-col justify-center">
+          <a href={anime.url} className="text-white">
+            <h3 className="">{anime.title}</h3>
+          </a>
+          <button
+            className="bg-slate-500 hover:bg-blue-300 rounded-md p-2 m-1 text-xs"
+            onClick={addToWatchlist} // Call the addToWatchlist function when the button is clicked
+          >
+            Add To Watchlist
+          </button>
+        </div>
       </div>
     </div>
   )

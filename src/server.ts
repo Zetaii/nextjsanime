@@ -15,6 +15,7 @@ import router from "./app/watchlistRoutes"
 import mongoose from "mongoose"
 import dotenv from "dotenv"
 import WatchlistModel from "./collections/WatchlistItem"
+import watchlistRouter from "./app/watchlistRoutes"
 
 dotenv.config()
 const PORT = Number(process.env.PORT) || 3000
@@ -27,14 +28,39 @@ const db = mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((error) => console.log("MongoDB connection error:", error))
 
-app.post("/watchlistitems", async (req, res) => {
-  console.log(req.body)
-  const newWatchlistItem = new WatchlistModel({
-    user: req.body.user,
-    anime: req.body.anime,
-  })
-  const createdWatchlist = await newWatchlistItem.save()
-  res.json(createdWatchlist)
+app.use("/watchlists", watchlistRouter)
+
+app.post("/add-to-watchlist", async (req, res) => {
+  try {
+    // Extract anime data from request body
+    const { title } = req.body
+
+    // Fetch anime data based on the title
+    const response = await fetch(
+      `https://api.jikan.moe/v4/anime?q=${title}&order_by=popularity&sort=asc&limit=1&sfw=true`
+    )
+    if (!response.ok) {
+      throw new Error("Failed to fetch anime data")
+    }
+    const jsonData = await response.json()
+
+    // Extract necessary data from the response
+    const anime = jsonData.data[0]
+    const animeData = {
+      title: anime.title,
+      imageUrl: anime.images.jpg.image_url || "",
+      episodes: anime.episodes,
+      // Add more fields as needed
+    }
+
+    // Insert data into MongoDB
+    const insertedData = await WatchlistModel.create(animeData)
+
+    res.json({ success: true, insertedData })
+  } catch (error) {
+    console.error("Error adding anime to watchlist:", error)
+    res.status(500).json({ success: false, error: error })
+  }
 })
 
 const createContext = ({

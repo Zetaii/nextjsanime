@@ -4,13 +4,27 @@ const Schema = mongoose.Schema
 const ObjectId = mongoose.Types.ObjectId
 
 const WatchlistItemSchema = new Schema({
-  user: {
+  userId: {
+    type: String,
+  },
+  animeId: {
+    type: String,
+  },
+  title: {
     type: String,
     required: true,
   },
-  anime: {
+  imageUrl: {
     type: String,
     required: true,
+  },
+  episodes: {
+    type: Number,
+    required: true,
+  },
+  currentEpisode: {
+    type: Number,
+    default: 0,
   },
 })
 

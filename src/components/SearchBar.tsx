@@ -39,12 +39,12 @@ const SearchBar = (props: any) => {
         </div>
       </div>
 
-      <div className="text-white">
+      <div className="rounded:lg text-white fixed right-20 overflow-y-auto max-h-[400px] overflow-x-hidden mr-60 WatchAnime scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-slate-700 scrollbar-track-slate-300">
         {isWatchAnimeVisible &&
           props.animeList.map((anime: any, index: number) => (
             <div
               key={anime.title}
-              className="w-[400px] bg-black rounded-md hover:bg-slate-400 flex ml-auto -mr-20"
+              className="w-[300px] bg-[#141824] rounded-md hover:bg-slate-400 flex mr-0"
             >
               <WatchAnime anime={anime} onHide={hideWatchAnime} />
             </div>

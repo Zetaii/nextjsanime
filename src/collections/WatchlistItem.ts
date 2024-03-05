@@ -1,15 +1,9 @@
+import { ObjectId } from "mongodb"
 import mongoose from "mongoose"
 
 const Schema = mongoose.Schema
-const ObjectId = mongoose.Types.ObjectId
 
 const WatchlistItemSchema = new Schema({
-  userId: {
-    type: String,
-  },
-  animeId: {
-    type: String,
-  },
   title: {
     type: String,
     required: true,
@@ -25,6 +19,13 @@ const WatchlistItemSchema = new Schema({
   currentEpisode: {
     type: Number,
     default: 0,
+  },
+  mal_id: {
+    type: Number,
+    required: true,
+  },
+  url: {
+    type: String,
   },
 })
 

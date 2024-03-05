@@ -1,14 +1,20 @@
-import React, { useRef } from "react"
+import React, { useRef, useState } from "react"
 import Image from "next/image"
 import { useOnClickOutside } from "../app/hooks/use-on-click-outside"
 
 interface WatchAnimeProps {
   anime: any
   onHide: () => void // Callback function to hide the component
+  handleAddToWatchlist: (anime: any) => void // Callback function to add anime to watchlist
 }
 
-const WatchAnime: React.FC<WatchAnimeProps> = ({ anime, onHide }) => {
+const WatchAnime: React.FC<WatchAnimeProps> = ({
+  anime,
+  onHide,
+  handleAddToWatchlist,
+}) => {
   const animeRef = useRef<HTMLDivElement | null>(null)
+  const [isAdded, setIsAdded] = useState(false) // State to track if anime is added to watchlist
 
   // Function to determine if an element should be ignored
   const shouldIgnore = (target: HTMLElement): boolean => {
@@ -38,8 +44,13 @@ const WatchAnime: React.FC<WatchAnimeProps> = ({ anime, onHide }) => {
         throw new Error("Failed to add anime to watchlist")
       }
 
-      const data = await response.json()
-      console.log("Response:", data)
+      const addedAnime = await response.json()
+      console.log("Response:", addedAnime)
+      setIsAdded(true)
+
+      handleAddToWatchlist(addedAnime) // Call the handleAddToWatchlist function with the added anime
+      window.location.reload()
+
       // Handle success
     } catch (error) {
       console.error("Error adding anime to watchlist:", error)
@@ -65,10 +76,14 @@ const WatchAnime: React.FC<WatchAnimeProps> = ({ anime, onHide }) => {
             <h3 className="">{anime.title}</h3>
           </a>
           <button
-            className="bg-slate-500 hover:bg-blue-300 rounded-md p-2 m-1 text-xs"
+            className={`bg-slate-500 hover:bg-blue-300 rounded-md p-2 m-1 text-xs ${
+              isAdded ? "bg-gray-400 cursor-not-allowed" : "" // Disable button and change color if added
+            }`}
             onClick={addToWatchlist} // Call the addToWatchlist function when the button is clicked
+            disabled={isAdded} // Disable the button if anime is added
           >
-            Add To Watchlist
+            {isAdded ? "Added" : "Add To Watchlist"}{" "}
+            {/* Change button text based on state */}
           </button>
         </div>
       </div>

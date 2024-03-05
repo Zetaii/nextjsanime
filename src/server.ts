@@ -50,6 +50,8 @@ app.post("/add-to-watchlist", async (req, res) => {
       title: anime.title,
       imageUrl: anime.images.jpg.image_url || "",
       episodes: anime.episodes,
+      mal_id: anime.mal_id,
+      url: anime.url,
       // Add more fields as needed
     }
 
@@ -60,6 +62,45 @@ app.post("/add-to-watchlist", async (req, res) => {
   } catch (error) {
     console.error("Error adding anime to watchlist:", error)
     res.status(500).json({ success: false, error: error })
+  }
+})
+
+app.put("/watchlists/:mal_id", async (req, res) => {
+  const { mal_id } = req.params
+  const { currentEpisode } = req.body
+
+  try {
+    const watchlistItem = await WatchlistModel.findOneAndUpdate(
+      { mal_id },
+      { currentEpisode },
+      { new: true }
+    )
+
+    if (!watchlistItem) {
+      return res.status(404).json({ error: "Watchlist item not found" })
+    }
+
+    res.json(watchlistItem)
+  } catch (error) {
+    console.error("Error updating watchlist item:", error)
+    res.status(500).json({ error: "Internal server error" })
+  }
+})
+
+app.delete("/watchlists/:mal_id", async (req, res) => {
+  const { mal_id } = req.params
+
+  try {
+    const deletedItem = await WatchlistModel.findOneAndDelete({ mal_id })
+
+    if (!deletedItem) {
+      return res.status(404).json({ error: "Watchlist item not found" })
+    }
+
+    res.json({ success: true, deletedItem })
+  } catch (error) {
+    console.error("Error deleting watchlist item:", error)
+    res.status(500).json({ error: "Internal server error" })
   }
 })
 

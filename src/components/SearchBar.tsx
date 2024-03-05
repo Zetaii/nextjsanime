@@ -3,16 +3,14 @@ import WatchAnime from "./WatchAnime"
 import { useState } from "react"
 
 const SearchBar = (props: any) => {
-  const [animeList, setAnimeList] = useState([])
-  const [watchlist, setWatchlist] = useState([])
+  const [watchlists, setWatchlists] = useState<any>([])
+
+  const [isWatchAnimeVisible, setIsWatchAnimeVisible] = React.useState(true)
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    props.HandleSearch(e)
+    props.handleSearch(props.search)
   }
-
-  // State variable to control the visibility of WatchAnime component
-  const [isWatchAnimeVisible, setIsWatchAnimeVisible] = React.useState(true)
 
   const hideWatchAnime = () => {
     setIsWatchAnimeVisible(false)
@@ -22,13 +20,17 @@ const SearchBar = (props: any) => {
     setIsWatchAnimeVisible(true)
   }
 
+  const handleAddToWatchlist = (addedAnime: any) => {
+    setWatchlists((prevWatchlists: any) => [...prevWatchlists, addedAnime])
+  }
+
   return (
     <>
       <div className="flex">
-        <div className="ml-auto">
-          <form onSubmit={handleSubmit}>
+        <div className="ml-auto ">
+          <form onSubmit={handleSubmit} className="pt-3">
             <input
-              className="pl-2 rounded-md bg-slate-500 text-white"
+              className=" pl-2 rounded-md bg-slate-500 text-white"
               placeholder="Search for an anime... "
               required
               value={props.search}
@@ -46,7 +48,11 @@ const SearchBar = (props: any) => {
               key={anime.title}
               className="w-[300px] bg-[#141824] rounded-md hover:bg-slate-400 flex mr-0"
             >
-              <WatchAnime anime={anime} onHide={hideWatchAnime} />
+              <WatchAnime
+                anime={anime}
+                onHide={hideWatchAnime}
+                handleAddToWatchlist={handleAddToWatchlist}
+              />
             </div>
           ))}
       </div>

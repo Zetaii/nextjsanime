@@ -4,6 +4,8 @@ import { useState } from "react"
 
 const SearchBar = (props: any) => {
   const [watchlists, setWatchlists] = useState<any>([])
+  const [watching, setWatching] = useState<any>([])
+  const [finished, setFinished] = useState<any>([])
 
   const [isWatchAnimeVisible, setIsWatchAnimeVisible] = React.useState(true)
 
@@ -24,13 +26,21 @@ const SearchBar = (props: any) => {
     setWatchlists((prevWatchlists: any) => [...prevWatchlists, addedAnime])
   }
 
+  const handleAddToWatching = (addedAnime: any) => {
+    setWatchlists((prevWatching: any) => [...prevWatching, addedAnime])
+  }
+
+  const handleAddToFinished = (addedAnime: any) => {
+    setWatchlists((prevFinished: any) => [...prevFinished, addedAnime])
+  }
+
   return (
     <>
       <div className="flex">
         <div className="ml-auto ">
           <form onSubmit={handleSubmit} className="pt-3">
             <input
-              className=" pl-2 rounded-md bg-slate-500 text-white"
+              className=" mt-5 mb-5 pl-2 rounded-md bg-slate-500 text-white border-2 b border-white w-50 h-10 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
               placeholder="Search for an anime... "
               required
               value={props.search}
@@ -52,6 +62,8 @@ const SearchBar = (props: any) => {
                 anime={anime}
                 onHide={hideWatchAnime}
                 handleAddToWatchlist={handleAddToWatchlist}
+                handleAddToFinished={handleAddToFinished}
+                handleAddToWatching={handleAddToWatching}
               />
             </div>
           ))}

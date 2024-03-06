@@ -4,16 +4,17 @@ import { getServerSideUser } from "../lib/payload-utils"
 import { cookies } from "next/headers"
 import { buttonVariants } from "./ui/button"
 import UserAccountNav from "./UserAccountNav"
+import { useState } from "react"
 
 const Navbar = async () => {
   const nextCookies = cookies()
   const { user } = await getServerSideUser(nextCookies)
 
   return (
-    <nav className="m:px-16 text-xl font-bold py-4 px-8 flex justify-between items-center gap-2 flex-wrap bg-[#161921] text-white">
+    <nav className="m:px-16 text-xl font-bold py-4 px-8 flex justify-between items-center gap-2 flex-wrap bg-[#161921] text-white border-b border-solid border-white  shadow-lg drop-shadow-glow  shadow-blue-200 ">
       <h1 className="text-2xl font-extrabold">
         <div className="flex justify-center">
-          <Link className="hover:text-black" href="/">
+          <Link className="hover:text-black flex " href="/">
             <img
               className="hover:rotate-[360deg] duration-200 ease-in-out"
               src="./logo.svg"

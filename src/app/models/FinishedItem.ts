@@ -1,9 +1,8 @@
-import { ObjectId } from "mongodb"
 import mongoose from "mongoose"
 
 const Schema = mongoose.Schema
 
-const WatchlistItemSchema = new Schema({
+const FinishedItemSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -23,12 +22,13 @@ const WatchlistItemSchema = new Schema({
   mal_id: {
     type: Number,
     required: true,
+    unique: true,
   },
   url: {
     type: String,
   },
 })
 
-const WatchlistModel = mongoose.model("watchlistitems", WatchlistItemSchema)
+const FinishedModel = mongoose.model("finishedItem", FinishedItemSchema)
 
-export default WatchlistModel
+export default FinishedModel

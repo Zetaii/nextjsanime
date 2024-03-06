@@ -19,6 +19,7 @@ const config = {
     },
     extend: {
       colors: {
+        "custom-glow": "rgba(255, 255, 255, 0.5)", // Customize the glow color
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -71,6 +72,16 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      dropShadow: {
+        glow: [
+          "0 0 10px hsl(var(--ring))",
+          "0 0 15px hsl(var(--ring))",
+          "0 0 20px hsl(var(--ring))",
+        ],
+      },
+      boxShadow: {
+        "custom-glow": "0 -3px 20px 10px rgba(255,255,255,0.5)",
       },
     },
   },

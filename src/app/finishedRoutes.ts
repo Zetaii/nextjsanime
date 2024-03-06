@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express"
-import WatchlistModel from "./models/WatchlistItem"
+import FinishedModel from "./models/FinishedItem"
 
-const watchlistRouter = express.Router()
+const finishedRouter = express.Router()
 
 // Endpoint to add an anime to the user's watchlist
-watchlistRouter.post("/add", async (req: Request, res: Response) => {
+finishedRouter.post("/add", async (req: Request, res: Response) => {
   try {
     const { userId, animeId, title, imageUrl } = req.body
 
@@ -14,15 +14,15 @@ watchlistRouter.post("/add", async (req: Request, res: Response) => {
     }
 
     // Create a new watchlist item and save it to the database
-    const newWatchlistItem = new WatchlistModel({
+    const newFinishedItem = new FinishedModel({
       userId,
       animeId,
       title,
       imageUrl,
     })
-    await newWatchlistItem.save()
+    await newFinishedItem.save()
 
-    res.status(201).json(newWatchlistItem)
+    res.status(201).json(newFinishedItem)
   } catch (err) {
     console.error("Error adding anime to watchlist:", err)
     res.status(500).json({ error: "Internal Server Error" })
@@ -30,17 +30,17 @@ watchlistRouter.post("/add", async (req: Request, res: Response) => {
 })
 
 // Endpoint to remove an anime from the user's watchlist
-watchlistRouter.post("/remove", async (req: Request, res: Response) => {
+finishedRouter.post("/remove", async (req: Request, res: Response) => {
   try {
-    const { watchlistItemId } = req.body
+    const { finishedItemId } = req.body
 
     // Check if watchlistItemId is provided
-    if (!watchlistItemId) {
+    if (!finishedItemId) {
       return res.status(400).json({ error: "watchlistItemId is required" })
     }
 
     // Remove the watchlist item from the database
-    await WatchlistModel.findByIdAndDelete(watchlistItemId)
+    await FinishedModel.findByIdAndDelete(finishedItemId)
 
     res.status(200).json({ message: "Watchlist item removed successfully" })
   } catch (err) {
@@ -50,16 +50,16 @@ watchlistRouter.post("/remove", async (req: Request, res: Response) => {
 })
 
 // Endpoint to retrieve the user's entire watchlist
-watchlistRouter.get("/", async (req: Request, res: Response) => {
+finishedRouter.get("/", async (req: Request, res: Response) => {
   try {
     // Retrieve all watchlist items from the database
-    const watchlistItems = await WatchlistModel.find()
+    const finishedItems = await FinishedModel.find()
 
-    res.status(200).json(watchlistItems)
+    res.status(200).json(finishedItems)
   } catch (err) {
     console.error("Error retrieving user's watchlist:", err)
     res.status(500).json({ error: "Internal Server Error" })
   }
 })
 
-export default watchlistRouter
+export default finishedRouter

@@ -11,11 +11,16 @@ import nextBuild from "next/dist/build"
 import path from "path"
 import { PayloadRequest } from "payload/types"
 import { parse } from "url"
-import router from "./app/watchlistRoutes"
 import mongoose from "mongoose"
 import dotenv from "dotenv"
-import WatchlistModel from "./collections/WatchlistItem"
+
 import watchlistRouter from "./app/watchlistRoutes"
+import WatchlistModel from "./app/models/WatchlistItem"
+
+import finishedRouter from "./app/finishedRoutes"
+import watchingRouter from "./app/watchingRoutes"
+import WatchingModel from "./app/models/WatchingItem"
+import FinishedModel from "./app/models/FinishedItem"
 
 dotenv.config()
 const PORT = Number(process.env.PORT) || 3000
@@ -29,6 +34,8 @@ const db = mongoose
   .catch((error) => console.log("MongoDB connection error:", error))
 
 app.use("/watchlists", watchlistRouter)
+app.use("/watching", watchingRouter)
+app.use("/finished", finishedRouter)
 
 app.post("/add-to-watchlist", async (req, res) => {
   try {
@@ -61,6 +68,76 @@ app.post("/add-to-watchlist", async (req, res) => {
     res.json({ success: true, insertedData })
   } catch (error) {
     console.error("Error adding anime to watchlist:", error)
+    res.status(500).json({ success: false, error: error })
+  }
+})
+
+app.post("/add-to-watching", async (req, res) => {
+  try {
+    // Extract anime data from request body
+    const { title } = req.body
+
+    // Fetch anime data based on the title
+    const response = await fetch(
+      `https://api.jikan.moe/v4/anime?q=${title}&order_by=popularity&sort=asc&limit=1&sfw=true`
+    )
+    if (!response.ok) {
+      throw new Error("Failed to fetch anime data")
+    }
+    const jsonData = await response.json()
+
+    // Extract necessary data from the response
+    const anime = jsonData.data[0]
+    const animeData = {
+      title: anime.title,
+      imageUrl: anime.images.jpg.image_url || "",
+      episodes: anime.episodes,
+      mal_id: anime.mal_id,
+      url: anime.url,
+      // Add more fields as needed
+    }
+
+    // Insert data into MongoDB
+    const insertedData = await WatchingModel.create(animeData)
+
+    res.json({ success: true, insertedData })
+  } catch (error) {
+    console.error("Error adding anime to watching:", error)
+    res.status(500).json({ success: false, error: error })
+  }
+})
+
+app.post("/add-to-finished", async (req, res) => {
+  try {
+    // Extract anime data from request body
+    const { title } = req.body
+
+    // Fetch anime data based on the title
+    const response = await fetch(
+      `https://api.jikan.moe/v4/anime?q=${title}&order_by=popularity&sort=asc&limit=1&sfw=true`
+    )
+    if (!response.ok) {
+      throw new Error("Failed to fetch anime data")
+    }
+    const jsonData = await response.json()
+
+    // Extract necessary data from the response
+    const anime = jsonData.data[0]
+    const animeData = {
+      title: anime.title,
+      imageUrl: anime.images.jpg.image_url || "",
+      episodes: anime.episodes,
+      mal_id: anime.mal_id,
+      url: anime.url,
+      // Add more fields as needed
+    }
+
+    // Insert data into MongoDB
+    const insertedData = await FinishedModel.create(animeData)
+
+    res.json({ success: true, insertedData })
+  } catch (error) {
+    console.error("Error adding anime to finished:", error)
     res.status(500).json({ success: false, error: error })
   }
 })
@@ -100,6 +177,84 @@ app.delete("/watchlists/:mal_id", async (req, res) => {
     res.json({ success: true, deletedItem })
   } catch (error) {
     console.error("Error deleting watchlist item:", error)
+    res.status(500).json({ error: "Internal server error" })
+  }
+})
+
+app.put("/watching/:mal_id", async (req, res) => {
+  const { mal_id } = req.params
+  const { currentEpisode } = req.body
+
+  try {
+    const watchingItem = await WatchingModel.findOneAndUpdate(
+      { mal_id },
+      { currentEpisode },
+      { new: true }
+    )
+
+    if (!watchingItem) {
+      return res.status(404).json({ error: "Watching item not found" })
+    }
+
+    res.json(watchingItem)
+  } catch (error) {
+    console.error("Error updating watchlist item:", error)
+    res.status(500).json({ error: "Internal server error" })
+  }
+})
+
+app.delete("/watching/:mal_id", async (req, res) => {
+  const { mal_id } = req.params
+
+  try {
+    const deletedItem = await WatchingModel.findOneAndDelete({ mal_id })
+
+    if (!deletedItem) {
+      return res.status(404).json({ error: "Watching item not found" })
+    }
+
+    res.json({ success: true, deletedItem })
+  } catch (error) {
+    console.error("Error deleting watching item:", error)
+    res.status(500).json({ error: "Internal server error" })
+  }
+})
+
+app.put("/finished/:mal_id", async (req, res) => {
+  const { mal_id } = req.params
+  const { currentEpisode } = req.body
+
+  try {
+    const finishedItem = await FinishedModel.findOneAndUpdate(
+      { mal_id },
+      { currentEpisode },
+      { new: true }
+    )
+
+    if (!finishedItem) {
+      return res.status(404).json({ error: "Finished item not found" })
+    }
+
+    res.json(finishedItem)
+  } catch (error) {
+    console.error("Error updating finished item:", error)
+    res.status(500).json({ error: "Internal server error" })
+  }
+})
+
+app.delete("/finished/:mal_id", async (req, res) => {
+  const { mal_id } = req.params
+
+  try {
+    const deletedItem = await FinishedModel.findOneAndDelete({ mal_id })
+
+    if (!deletedItem) {
+      return res.status(404).json({ error: "Finished item not found" })
+    }
+
+    res.json({ success: true, deletedItem })
+  } catch (error) {
+    console.error("Error deleting finished item:", error)
     res.status(500).json({ error: "Internal server error" })
   }
 })

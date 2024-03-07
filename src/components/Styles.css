@@ -1,0 +1,72 @@
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.1;
+  }
+  25% {
+    opacity: 0.25;
+  }
+  35% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75% {
+    opacity: 0.75;
+  }
+  85% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.navbar {
+  animation: fadeIn 0.2s ease-in-out;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #161921;
+  color: white;
+  border-bottom: 1px solid white;
+  box-shadow: 0 0 50px 15px #48abe0;
+}
+
+.footer {
+  display: flex;
+  animation: fadeIn 0.5s ease-in-out;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #161921;
+  color: white;
+  border-top: 1px solid white;
+  box-shadow: 0 0 50px 15px #48abe0;
+}
+
+.cards {
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+.wrapper {
+  animation: fadeIn 1.2s ease-in-out;
+  z-index: 1;
+
+  background-color: #161921;
+  color: white;
+  border-top: 1px solid white;
+  box-shadow: 0 0 50px 15px #48abe0;
+}
+
+m: px-16 text-xl font-bold py-4 px-8 flex justify-between items-center gap-2
+  flex-wrap bg-[#161921] text-white border-b border-solid border-white shadow-lg
+  shadow-blue-100;
+
+sm: px-16 py-4 px-8 flex justify-between items-center gap-2 flex-wrap
+  bg-[#161921] shadow-custom-glow border-t-4;

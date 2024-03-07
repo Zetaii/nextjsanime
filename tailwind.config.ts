@@ -81,7 +81,7 @@ const config = {
         ],
       },
       boxShadow: {
-        "custom-glow": "0 -3px 20px 10px rgba(255,255,255,0.5)",
+        "custom-glow": "0 -3px 20px 10px rgba(140,255,255,0.5)",
       },
     },
   },

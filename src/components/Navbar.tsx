@@ -1,17 +1,16 @@
-import Image from "next/image"
 import Link from "next/link"
 import { getServerSideUser } from "../lib/payload-utils"
 import { cookies } from "next/headers"
 import { buttonVariants } from "./ui/button"
 import UserAccountNav from "./UserAccountNav"
-import { useState } from "react"
+import "./Styles.css"
 
 const Navbar = async () => {
   const nextCookies = cookies()
   const { user } = await getServerSideUser(nextCookies)
 
   return (
-    <nav className="m:px-16 text-xl font-bold py-4 px-8 flex justify-between items-center gap-2 flex-wrap bg-[#161921] text-white border-b border-solid border-white  shadow-lg drop-shadow-glow  shadow-blue-200 ">
+    <nav className="navbar">
       <h1 className="text-2xl font-extrabold">
         <div className="flex justify-center">
           <Link className="hover:text-black flex " href="/">
@@ -23,13 +22,22 @@ const Navbar = async () => {
           </Link>
         </div>
       </h1>
-      <Link className="hover:text-black" href="/">
+      <Link
+        className="font-bold text-lg hover:text-black hover:bg-white p-2 rounded-md "
+        href="/"
+      >
         Home
       </Link>
-      <Link className="hover:text-black" href="watchlist">
+      <Link
+        className="font-bold text-lg hover:text-black hover:bg-white p-2 rounded-md"
+        href="watchlist"
+      >
         Watchlist
       </Link>
-      <Link className="hover:text-black" href="About">
+      <Link
+        className="font-bold text-lg hover:text-black hover:bg-white p-2 rounded-md"
+        href="About"
+      >
         About
       </Link>
       <div className="flex items-center gap-6">
@@ -40,7 +48,7 @@ const Navbar = async () => {
             href="/sign-in"
             className={`${buttonVariants({
               variant: "ghost",
-            })} text-xl font-bold hover:text-black`}
+            })} text-xl  hover:text-black`}
           >
             Sign in{" "}
           </Link>

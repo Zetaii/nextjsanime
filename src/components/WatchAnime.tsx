@@ -133,14 +133,17 @@ const WatchAnime: React.FC<WatchAnimeProps> = ({
   useOnClickOutside(animeRef, onHide, shouldIgnore)
 
   return (
-    <div className="WatchAnime flex text-white rounded">
+    <div className="WatchAnime  flex  text-white rounded">
       <div ref={animeRef} className="flex gap-2 m-2">
         <div className="relative w-[120px] h-[144px]">
-          <Image
-            src={anime.images.jpg.large_image_url}
-            alt="Anime image"
-            fill
-          />
+          <a href={anime.url} className="text-white">
+            <Image
+              className="rounded-md"
+              src={anime.images.jpg.large_image_url}
+              alt="Anime image"
+              fill
+            />
+          </a>
         </div>
         <div className="flex flex-col justify-center">
           <a href={anime.url} className="text-white">

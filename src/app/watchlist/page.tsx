@@ -82,21 +82,99 @@ const Page = () => {
     }
   }
 
+  const handleEpisodeChangeWatching = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    mal_id: number
+  ) => {
+    const newEpisodeNumber = event.target.value
+    setEpisodeNumbers((prevState) => ({
+      ...prevState,
+      [mal_id]: newEpisodeNumber,
+    }))
+
+    // Update the local state with the new current episode number
+    setWatching((prevWatching) =>
+      prevWatching.map((watching) =>
+        watching.mal_id === mal_id
+          ? { ...watching, currentEpisode: parseInt(newEpisodeNumber) }
+          : watching
+      )
+    )
+
+    try {
+      const response = await fetch(`/watching/${mal_id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ currentEpisode: newEpisodeNumber }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to update episode number in the database")
+      }
+
+      const updatedWatchingItem = await response.json()
+      console.log("Updated watchlist item:", updatedWatchingItem)
+    } catch (error) {
+      console.error("Error updating episode number:", error)
+    }
+  }
+
+  const handleEpisodeChangeFinished = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    mal_id: number
+  ) => {
+    const newEpisodeNumber = event.target.value
+    setEpisodeNumbers((prevState) => ({
+      ...prevState,
+      [mal_id]: newEpisodeNumber,
+    }))
+
+    // Update the local state with the new current episode number
+    setFinished((prevFinished) =>
+      prevFinished.map((finished) =>
+        finished.mal_id === mal_id
+          ? { ...finished, currentEpisode: parseInt(newEpisodeNumber) }
+          : finished
+      )
+    )
+
+    try {
+      const response = await fetch(`/finished/${mal_id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ currentEpisode: newEpisodeNumber }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to update episode number in the database")
+      }
+
+      const updatedfinishedItem = await response.json()
+      console.log("Updated watchlist item:", updatedfinishedItem)
+    } catch (error) {
+      console.error("Error updating episode number:", error)
+    }
+  }
+
   useEffect(() => {
     fetchWatchlists()
-    const watchlistsInterval = setInterval(fetchWatchlists, 500)
+    const watchlistsInterval = setInterval(fetchWatchlists, 1000)
     return () => clearInterval(watchlistsInterval)
   }, [])
 
   useEffect(() => {
     fetchWatching()
-    const watchingInterval = setInterval(fetchWatching, 500)
+    const watchingInterval = setInterval(fetchWatching, 1000)
     return () => clearInterval(watchingInterval)
   }, [])
 
   useEffect(() => {
     fetchFinished()
-    const finishedInterval = setInterval(fetchFinished, 500)
+    const finishedInterval = setInterval(fetchFinished, 1000)
     return () => clearInterval(finishedInterval)
   }, [])
 
@@ -235,8 +313,8 @@ const Page = () => {
     try {
       let removeFromSectionEndpoint = ""
       switch (section) {
-        case "watching":
-          removeFromSectionEndpoint = `/watched/${anime.mal_id}`
+        case "watchlist":
+          removeFromSectionEndpoint = `/watchlists/${anime.mal_id}`
           break
         case "finished":
           removeFromSectionEndpoint = `/finished/${anime.mal_id}`
@@ -287,8 +365,8 @@ const Page = () => {
         case "watching":
           removeFromSectionEndpoint = `/watching/${anime.mal_id}`
           break
-        case "watched":
-          removeFromSectionEndpoint = `/watched/${anime.mal_id}`
+        case "watchlist":
+          removeFromSectionEndpoint = `/watchlists/${anime.mal_id}`
           break
         default:
           console.error("Invalid section")
@@ -383,8 +461,12 @@ const Page = () => {
     }
   }
 
+  let watchingPercentage = watching.map((watching) => {
+    return (watching.currentEpisode / watching.episodes) * 100
+  })
+
   return (
-    <MaxWidthWrapper className="wrapper font-semibold border-2 min-h-[90vh]">
+    <MaxWidthWrapper className="wrapper font-semibold border-2 min-h-[90vh] rounded-md  ">
       <SearchBar
         className="WatchAnime text-white max-h-[200px] overflow-y-hidden overflow-x-hidden scrollbar"
         handleSearch={handleSearch}
@@ -394,10 +476,11 @@ const Page = () => {
       />
 
       <>
-        <div className="text-white -ml-10 -mt-5 ">
-          <h1 className="text-2xl font-bold -pt-10 -mt-2 border-b-2">
+        <div className="text-white -ml-10 mt-20 min-h-52 ">
+          <h1 className="text-2xl font-bold -pt-10 -mt-2 border-b-2 title">
             Currently Watching
           </h1>
+          {watching.length === 0 && <p> Nothing here yet </p>}
           <div>
             <ul className="cards">
               {watching.map((watching) => (
@@ -423,7 +506,7 @@ const Page = () => {
                           type="number"
                           value={episodeNumbers[watching.mal_id] || ""}
                           onChange={(e) =>
-                            handleEpisodeChange(e, watching.mal_id)
+                            handleEpisodeChangeWatching(e, watching.mal_id)
                           }
                           placeholder="#"
                           className="border border-gray-300 rounded py-1 pl-1 w-9 text-sm h-5 text-center text-black"
@@ -440,21 +523,42 @@ const Page = () => {
                         ).toFixed(0)}
                         %
                       </p>
+                      <div>
+                        <div className="bg-purple-500/20 h-4 rounded-full overflow-hidden">
+                          <div
+                            className="bg-purple-500 flex justify-center items-center"
+                            style={{
+                              width: `${Math.round(
+                                (watching.currentEpisode / watching.episodes) *
+                                  100
+                              )}%`,
+                            }}
+                          >
+                            <div className="pl-8">
+                              {(
+                                (watching.currentEpisode / watching.episodes) *
+                                100
+                              ).toFixed(0)}
+                              %
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                       <button
-                        className="bg-slate-100 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2"
+                        className="bg-red-500 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
                         onClick={() => removeFromWatching(watching.mal_id)}
                       >
                         Remove from Watching
                       </button>
                       <button
-                        className="bg-slate-100 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2"
+                        className="bg-yellow-600  rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
                         onClick={() => addToWatchlist(watching, "watching")}
                       >
                         Add to Watchlist
                       </button>
                       <button
-                        className="bg-slate-100 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2"
-                        onClick={() => removeFromWatchlist(watching.mal_id)}
+                        className="bg-emerald-700 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 glow-on-hover  "
+                        onClick={() => addToFinished(watching, "watching")}
                       >
                         Add to Finished
                       </button>
@@ -465,10 +569,11 @@ const Page = () => {
             </ul>
           </div>
         </div>
-        <div className="text-white -ml-10 mt-5 mb-5 ">
-          <h1 className="font-bold text-2xl -pt-2 pb-1 border-b-2">
+        <div className="text-white -ml-10 mt-5 mb-5 min-h-52">
+          <h1 className="font-bold text-2xl -pt-2 pb-1 border-b-2 title ">
             Want to Watch
           </h1>
+          {watchlists.length === 0 && <p>Nothing here yet</p>}
           <div>
             <ul className="cards">
               {watchlists.map((watchlist) => (
@@ -511,21 +616,44 @@ const Page = () => {
                         ).toFixed(0)}
                         %
                       </p>
+                      <div>
+                        <div className="bg-purple-500/20 h-4 rounded-full overflow-hidden">
+                          <div
+                            className="bg-purple-500 flex justify-center items-center"
+                            style={{
+                              width: `${Math.round(
+                                (watchlist.currentEpisode /
+                                  watchlist.episodes) *
+                                  100
+                              )}%`,
+                            }}
+                          >
+                            <div className="pl-8">
+                              {(
+                                (watchlist.currentEpisode /
+                                  watchlist.episodes) *
+                                100
+                              ).toFixed(0)}
+                              %
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                       <button
-                        className="bg-slate-100 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2"
+                        className="bg-red-500 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
                         onClick={() => removeFromWatchlist(watchlist.mal_id)}
                       >
                         Remove from Watchlist
                       </button>
                       <button
-                        className="bg-slate-100 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2"
-                        onClick={() => removeFromWatchlist(watchlist.mal_id)}
+                        className="bg-blue-400 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
+                        onClick={() => addToWatching(watchlist, "watchlist")}
                       >
                         Add to Watching
                       </button>
                       <button
-                        className="bg-slate-100 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2"
-                        onClick={() => removeFromWatchlist(watchlist.mal_id)}
+                        className="bg-emerald-700 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 glow-on-hover"
+                        onClick={() => addToFinished(watchlist, "watchlist")}
                       >
                         Add to Finished
                       </button>
@@ -536,8 +664,11 @@ const Page = () => {
             </ul>
           </div>
         </div>
-        <div className="text-white -ml-10 mb-5 pb-20 ">
-          <h1 className="font-bold text-2xl -pt-2  border-b-2">Finished</h1>
+        <div className="text-white -ml-10 mb-5 pb-20 min-h-52">
+          <h1 className="font-bold text-2xl -pt-2  border-b-2 title">
+            Finished
+          </h1>
+          {finished.length === 0 && <p>Nothing here yet</p>}
           <div>
             <ul className="cards">
               {finished.map((finished) => (
@@ -563,7 +694,7 @@ const Page = () => {
                           type="number"
                           value={episodeNumbers[finished.mal_id] || ""}
                           onChange={(e) =>
-                            handleEpisodeChange(e, finished.mal_id)
+                            handleEpisodeChangeFinished(e, finished.mal_id)
                           }
                           placeholder="#"
                           className="border border-gray-300 rounded py-1 pl-1 w-9 text-sm h-5 text-center text-black"
@@ -580,20 +711,41 @@ const Page = () => {
                         ).toFixed(0)}
                         %
                       </p>
+                      <div>
+                        <div className="bg-purple-500/20 h-4 rounded-full overflow-hidden">
+                          <div
+                            className="bg-purple-500 flex justify-center items-center"
+                            style={{
+                              width: `${Math.round(
+                                (finished.currentEpisode / finished.episodes) *
+                                  100
+                              )}%`,
+                            }}
+                          >
+                            <div className="pl-8">
+                              {(
+                                (finished.currentEpisode / finished.episodes) *
+                                100
+                              ).toFixed(0)}
+                              %
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                       <button
-                        className="bg-slate-100 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2"
+                        className="bg-red-500 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
                         onClick={() => removeFromFinished(finished.mal_id)}
                       >
                         Remove from Finished
                       </button>
                       <button
-                        className="bg-slate-100 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2"
-                        onClick={() => removeFromFinished(finished.mal_id)}
+                        className="bg-blue-400 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
+                        onClick={() => addToWatching(finished, "finished")}
                       >
                         Add to Watching
                       </button>
                       <button
-                        className="bg-slate-100 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2"
+                        className="bg-yellow-600 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 glow-on-hover"
                         onClick={() => addToWatchlist(finished, "finished")}
                       >
                         Add to Watchlist

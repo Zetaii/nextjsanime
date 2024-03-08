@@ -13,7 +13,6 @@ const WatchlistItemSchema = new Schema({
   },
   episodes: {
     type: Number,
-    required: true,
   },
   currentEpisode: {
     type: Number,

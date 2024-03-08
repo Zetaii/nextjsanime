@@ -50,7 +50,9 @@ function LoadMore() {
               alt="spinner"
               width={56}
               height={56}
+              sizes="100vw"
               className="object-contain"
+              priority
             />
           )}
         </div>

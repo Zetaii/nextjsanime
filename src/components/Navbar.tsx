@@ -17,6 +17,9 @@ const Navbar = async () => {
             <img
               className="hover:rotate-[360deg] duration-200 ease-in-out"
               src="./logo.svg"
+              alt="logo"
+              width={50}
+              height={50}
             ></img>
             <h1 className="ml-2 mt-1 text-4xl font-extrabold">ZTAI</h1>
           </Link>

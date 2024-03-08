@@ -45,7 +45,9 @@ function AnimeCard({ anime, index }: Prop) {
           src={`https://shikimori.one${anime.image.original}`}
           alt={anime.name}
           fill
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
           className="rounded-xl hover:scale-110 transition-all"
+          priority
         />
       </div>
       <div className="py-4 flex flex-col gap-3">
@@ -65,6 +67,7 @@ function AnimeCard({ anime, index }: Prop) {
               src="./episodes.svg"
               alt="episodes"
               width={20}
+              sizes="100vw"
               height={20}
               className="object-contain hover:scale-110 transition-all"
             />
@@ -78,6 +81,7 @@ function AnimeCard({ anime, index }: Prop) {
               alt="star"
               width={18}
               height={18}
+              sizes="100vw"
               className="object-contain"
             />
             <p className="text-base font-bold text-[#FFAD49]">{anime.score}</p>

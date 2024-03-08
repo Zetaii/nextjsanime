@@ -8,7 +8,7 @@ function Hero() {
           src="./logo.svg"
           alt="logo"
           width={101}
-          height={96}
+          height={101}
           className="object-contain hover:rotate-[360deg] duration-200 ease-in-out"
         />
         <h1 className="sm:text-6xl text-5xl text-white lg:max-w-lg font-bold leading-[120%]">
@@ -20,6 +20,7 @@ function Hero() {
         <Image
           src="/anime.png"
           alt="anime"
+          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
           fill
           className="object-contain hover:scale-110 ease-in-out transition-all"
         />

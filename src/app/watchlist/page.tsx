@@ -162,20 +162,20 @@ const Page = () => {
 
   useEffect(() => {
     fetchWatchlists()
-    const watchlistsInterval = setInterval(fetchWatchlists, 1000)
-    return () => clearInterval(watchlistsInterval)
+    // const watchlistsInterval = setInterval(fetchWatchlists, 1000)
+    // return () => clearInterval(watchlistsInterval)
   }, [])
 
   useEffect(() => {
     fetchWatching()
-    const watchingInterval = setInterval(fetchWatching, 1000)
-    return () => clearInterval(watchingInterval)
+    // const watchingInterval = setInterval(fetchWatching, 1000)
+    // return () => clearInterval(watchingInterval)
   }, [])
 
   useEffect(() => {
     fetchFinished()
-    const finishedInterval = setInterval(fetchFinished, 1000)
-    return () => clearInterval(finishedInterval)
+    // const finishedInterval = setInterval(fetchFinished, 1000)
+    // return () => clearInterval(finishedInterval)
   }, [])
 
   const fetchWatchlists = async () => {
@@ -298,7 +298,7 @@ const Page = () => {
 
       const addedItem = await response.json()
       console.log("Added item to watchlist:", addedItem)
-
+      await fetchWatchlists
       // Update the local state with the added item
       setWatchlists((prevWatchlists) => [...prevWatchlists, addedItem])
     } catch (error) {
@@ -504,12 +504,11 @@ const Page = () => {
                         Current Episode: {watching.currentEpisode}{" "}
                         <input
                           type="number"
-                          value={episodeNumbers[watching.mal_id] || ""}
                           onChange={(e) =>
                             handleEpisodeChangeWatching(e, watching.mal_id)
                           }
                           placeholder="#"
-                          className="border border-gray-300 rounded py-1 pl-1 w-9 text-sm h-5 text-center text-black"
+                          className="border border-gray-300 rounded py-1 pl-1 w-12 text-sm h-5 text-center text-black"
                           key={watching.mal_id}
                         />
                       </p>{" "}
@@ -602,7 +601,7 @@ const Page = () => {
                             handleEpisodeChange(e, watchlist.mal_id)
                           }
                           placeholder="#"
-                          className="border border-gray-300 rounded py-1 pl-1 w-9 text-sm h-5 text-center text-black"
+                          className="border border-gray-300 rounded py-1 pl-1 w-12 text-sm h-5 text-center text-black"
                           key={watchlist.mal_id}
                         />
                       </p>{" "}
@@ -697,7 +696,7 @@ const Page = () => {
                             handleEpisodeChangeFinished(e, finished.mal_id)
                           }
                           placeholder="#"
-                          className="border border-gray-300 rounded py-1 pl-1 w-9 text-sm h-5 text-center text-black"
+                          className="border border-gray-300 rounded py-1 pl-1 w-12 text-sm h-5 text-center text-black"
                           key={finished.mal_id}
                         />
                       </p>{" "}

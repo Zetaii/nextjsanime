@@ -1,6 +1,5 @@
 import { fetchAnime } from "./action"
 import Hero from "../components/Hero"
-
 import LoadMore from "../components/LoadMore"
 import MaxWidthWrapper from "../components/MaxWidthWrapper"
 import AnimeCard, { AnimeProp } from "../components/AnimeCard"

@@ -1,7 +1,7 @@
 "use client"
 
 import { User } from "payload/dist/auth"
-import { useAuth } from "../app/hooks/use-auth"
+import { useAuth } from "../hooks/use-auth"
 import { Button } from "./ui/button"
 
 import Link from "next/link"

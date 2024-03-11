@@ -14,13 +14,12 @@ watchingRouter.post("/add", async (req: Request, res: Response) => {
     }
 
     // Create a new watchlist item and save it to the database
-    const newWatchingItem = new WatchingModel({
+    const newWatchingItem = await WatchingModel.create({
       userId,
       animeId,
       title,
       imageUrl,
     })
-    await newWatchingItem.save()
 
     res.status(201).json(newWatchingItem)
   } catch (err) {

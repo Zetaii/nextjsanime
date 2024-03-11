@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react"
 import Image from "next/image"
-import { useOnClickOutside } from "../app/hooks/use-on-click-outside"
+import { useOnClickOutside } from "../hooks/use-on-click-outside"
 
 interface WatchAnimeProps {
   anime: any

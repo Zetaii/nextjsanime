@@ -14,13 +14,12 @@ finishedRouter.post("/add", async (req: Request, res: Response) => {
     }
 
     // Create a new watchlist item and save it to the database
-    const newFinishedItem = new FinishedModel({
+    const newFinishedItem = await FinishedModel.create({
       userId,
       animeId,
       title,
       imageUrl,
     })
-    await newFinishedItem.save()
 
     res.status(201).json(newFinishedItem)
   } catch (err) {

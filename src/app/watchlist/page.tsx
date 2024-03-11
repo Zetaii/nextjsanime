@@ -466,7 +466,7 @@ const Page = () => {
   })
 
   return (
-    <MaxWidthWrapper className="wrapper font-semibold border-2 min-h-[90vh] rounded-md  ">
+    <MaxWidthWrapper className="wrapper font-semibold border-2 min-h-[90vh] rounded-md animate-my-glow-combined">
       <SearchBar
         className="WatchAnime text-white max-h-[200px] overflow-y-hidden overflow-x-hidden scrollbar"
         handleSearch={handleSearch}
@@ -491,7 +491,7 @@ const Page = () => {
                   <li className="flex">
                     <a href={watching.url} target="_blank">
                       <img
-                        className="mr-4 w-[144px] h-[144px] rounded-md "
+                        className="mr-4 w-[144px] h-[144px] rounded-md animate-fade-in"
                         src={watching.imageUrl}
                         alt={watching.title}
                       />
@@ -583,7 +583,7 @@ const Page = () => {
                   <li className="flex">
                     <a href={watchlist.url} target="_blank">
                       <img
-                        className="mr-4 w-[144px] h-[144px] rounded-md "
+                        className="mr-4 w-[144px] h-[144px] rounded-md  animate-fade-in"
                         src={watchlist.imageUrl}
                         alt={watchlist.title}
                       />
@@ -678,7 +678,7 @@ const Page = () => {
                   <li className="flex">
                     <a href={finished.url} target="_blank">
                       <img
-                        className="mr-4 w-[144px] h-[144px] rounded-md "
+                        className="mr-4 w-[144px] h-[144px] rounded-md animate-fade-in "
                         src={finished.imageUrl}
                         alt={finished.title}
                       />

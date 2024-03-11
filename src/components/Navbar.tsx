@@ -3,14 +3,17 @@ import { getServerSideUser } from "../lib/payload-utils"
 import { cookies } from "next/headers"
 import { buttonVariants } from "./ui/button"
 import UserAccountNav from "./UserAccountNav"
-import "./Styles.css"
 
 const Navbar = async () => {
   const nextCookies = cookies()
   const { user } = await getServerSideUser(nextCookies)
 
   return (
-    <nav className="navbar">
+    <nav
+      className="m:px-16 text-xl font-bold py-4 px-8 flex justify-between items-center gap-2
+    flex-wrap bg-[#161921] text-white border-b  animate-my-glow-combined rounded
+    "
+    >
       <h1 className="text-2xl font-extrabold">
         <div className="flex justify-center">
           <Link className="hover:text-black flex " href="/">

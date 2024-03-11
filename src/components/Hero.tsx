@@ -22,7 +22,7 @@ function Hero() {
           alt="anime"
           sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
           fill
-          className="object-contain hover:scale-110 ease-in-out transition-all"
+          className="object-contain hover:scale-110 ease-in-out transition-all animate-fade-in"
         />
       </div>
     </header>

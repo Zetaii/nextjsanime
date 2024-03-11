@@ -23,7 +23,7 @@ import WatchingModel from "./app/models/WatchingItem"
 import FinishedModel from "./app/models/FinishedItem"
 
 dotenv.config()
-const PORT = Number(process.env.PORT) || 3000
+const PORT = 3000
 const app = express()
 
 app.use(express.json())
@@ -274,11 +274,11 @@ export type WebhookRequest = IncomingMessage & {
 }
 
 const start = async () => {
-  const webhookMiddleware = bodyParser.json({
-    verify: (req: WebhookRequest, _, buffer) => {
-      req.rawBody = buffer
-    },
-  })
+  // const webhookMiddleware = bodyParser.json({
+  //   verify: (req: WebhookRequest, _, buffer) => {
+  //     req.rawBody = buffer
+  //   },
+  // })
 
   // app.post("/api/webhooks/stripe", webhookMiddleware, stripeWebhookHandler)
 
@@ -304,29 +304,29 @@ const start = async () => {
     return
   }
 
-  const cartRouter = express.Router()
+  // const cartRouter = express.Router()
 
-  cartRouter.use(payload.authenticate)
+  // cartRouter.use(payload.authenticate)
 
-  cartRouter.get("/", (req, res) => {
-    const request = req as PayloadRequest
+  // cartRouter.get("/", (req, res) => {
+  //   const request = req as PayloadRequest
 
-    if (!request.user) return res.redirect("/sign-in?origin=cart")
+  //   if (!request.user) return res.redirect("/sign-in?origin=cart")
 
-    const parsedUrl = parse(req.url, true)
-    const { query } = parsedUrl
+  //   const parsedUrl = parse(req.url, true)
+  //   const { query } = parsedUrl
 
-    return nextApp.render(req, res, "/cart", query)
-  })
+  //   return nextApp.render(req, res, "/cart", query)
+  // })
 
-  app.use("/cart", cartRouter)
-  app.use(
-    "/api/trpc",
-    trpcExpress.createExpressMiddleware({
-      router: appRouter,
-      createContext,
-    })
-  )
+  // app.use("/cart", cartRouter)
+  // app.use(
+  //   "/api/trpc",
+  //   trpcExpress.createExpressMiddleware({
+  //     router: appRouter,
+  //     createContext,
+  //   })
+  // )
 
   app.use((req, res) => nextHandler(req, res))
 

@@ -68,7 +68,7 @@ app.post("/add-to-watchlist", async (req, res) => {
     res.json({ success: true, insertedData })
   } catch (error) {
     console.error("Error adding anime to watchlist:", error)
-    res.status(500).json({ success: false, error: error })
+    res.status(500).json({ success: false, error })
   }
 })
 

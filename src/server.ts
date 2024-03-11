@@ -23,7 +23,7 @@ import WatchingModel from "./app/models/WatchingItem"
 import FinishedModel from "./app/models/FinishedItem"
 
 dotenv.config()
-const PORT = 3000 || process.env.PORT
+const PORT = process.env.PORT || 10000
 const app = express()
 
 app.use(express.json())

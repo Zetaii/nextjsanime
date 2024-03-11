@@ -1,6 +1,7 @@
 // pages/api/watchlist.ts
-import WatchlistModel from "@/src/collections/WatchlistItem"
+
 import { NextApiRequest, NextApiResponse } from "next"
+import WatchlistModel from "../../models/WatchlistItem"
 
 export default async function handler(
   req: NextApiRequest,

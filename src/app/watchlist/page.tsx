@@ -3,7 +3,6 @@
 import MaxWidthWrapper from "@/src/components/MaxWidthWrapper"
 import SearchBar from "@/src/components/SearchBar"
 import React, { useEffect, useState } from "react"
-import "./Styles.css"
 
 interface Watchlist {
   title: string

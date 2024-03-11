@@ -2,6 +2,7 @@
 
 import MaxWidthWrapper from "@/src/components/MaxWidthWrapper"
 import SearchBar from "@/src/components/SearchBar"
+import Image from "next/image"
 import React, { useEffect, useState } from "react"
 
 interface Watchlist {
@@ -489,10 +490,12 @@ const Page = () => {
                 >
                   <li className="flex">
                     <a href={watching.url} target="_blank">
-                      <img
-                        className="mr-4 w-[144px] h-[144px] rounded-md animate-fade-in"
+                      <Image
                         src={watching.imageUrl}
                         alt={watching.title}
+                        width={144}
+                        height={144}
+                        className="mr-5"
                       />
                     </a>
                     <div className="leading-5">
@@ -581,10 +584,12 @@ const Page = () => {
                 >
                   <li className="flex">
                     <a href={watchlist.url} target="_blank">
-                      <img
-                        className="mr-4 w-[144px] h-[144px] rounded-md  animate-fade-in"
+                      <Image
                         src={watchlist.imageUrl}
-                        alt={watchlist.title}
+                        alt={watchlist.imageUrl}
+                        height={144}
+                        width={144}
+                        className="mr-5"
                       />
                     </a>
                     <div className="leading-5">
@@ -676,10 +681,12 @@ const Page = () => {
                 >
                   <li className="flex">
                     <a href={finished.url} target="_blank">
-                      <img
-                        className="mr-4 w-[144px] h-[144px] rounded-md animate-fade-in "
+                      <Image
                         src={finished.imageUrl}
                         alt={finished.title}
+                        height={144}
+                        width={144}
+                        className="mr-5"
                       />
                     </a>
                     <div className="leading-5">

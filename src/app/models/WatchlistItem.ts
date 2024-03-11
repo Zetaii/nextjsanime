@@ -20,7 +20,7 @@ const WatchlistItemSchema = new Schema({
   },
   mal_id: {
     type: Number,
-    required: true,
+
     unique: true,
   },
   url: {

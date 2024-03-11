@@ -18,6 +18,7 @@ import { Label } from "@/src/components/ui/label"
 import { Input } from "@/src/components/ui/input"
 import { cn } from "@/src/lib/utils"
 import { trpc } from "@/src/trpc/client"
+import Image from "next/image"
 
 const Page = () => {
   const searchParams = useSearchParams()
@@ -73,7 +74,7 @@ const Page = () => {
       <div className="container relative flex pt-20 flex-col items-center justify-center lg:px-0">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col items-center space-y-2 text-center">
-            <img src="anime.png"></img>
+            <Image src="anime.png" alt="anime image" width={100} height={100} />
             <h1 className="text-2xl font-semibold tracking-tight text-white">
               Sign in to your {isSeller ? "seller" : ""} account
             </h1>

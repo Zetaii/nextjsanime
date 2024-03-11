@@ -3,6 +3,7 @@ import { getServerSideUser } from "../lib/payload-utils"
 import { cookies } from "next/headers"
 import { buttonVariants } from "./ui/button"
 import UserAccountNav from "./UserAccountNav"
+import Image from "next/image"
 
 const Navbar = async () => {
   const nextCookies = cookies()
@@ -17,13 +18,7 @@ const Navbar = async () => {
       <h1 className="text-2xl font-extrabold">
         <div className="flex justify-center">
           <Link className="hover:text-black flex " href="/">
-            <img
-              className="hover:rotate-[360deg] duration-200 ease-in-out"
-              src="./logo.svg"
-              alt="logo"
-              width={50}
-              height={50}
-            ></img>
+            <Image src="./logo.svg" alt="logo" width={50} height={50} />
             <h1 className="ml-2 mt-1 text-4xl font-extrabold">ZTAI</h1>
           </Link>
         </div>

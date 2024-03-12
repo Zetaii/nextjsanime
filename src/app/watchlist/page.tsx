@@ -57,7 +57,6 @@ const Page = () => {
       // Update component state with the updated watchlist data
     } catch (error) {
       console.error("Error updating watchlist:", error)
-      // Handle error
     }
 
     fetchWatchlists()
@@ -76,7 +75,6 @@ const Page = () => {
       // Update component state with the updated watchlist data
     } catch (error) {
       console.error("Error updating watchlist:", error)
-      // Handle error
     }
 
     fetchWatching()
@@ -95,7 +93,6 @@ const Page = () => {
       // Update component state with the updated watchlist data
     } catch (error) {
       console.error("Error updating watchlist:", error)
-      // Handle error
     }
 
     fetchFinished()
@@ -220,20 +217,14 @@ const Page = () => {
 
   useEffect(() => {
     fetchWatchlists()
-    // const watchlistsInterval = setInterval(fetchWatchlists, 1000)
-    // return () => clearInterval(watchlistsInterval)
   }, [])
 
   useEffect(() => {
     fetchWatching()
-    // const watchingInterval = setInterval(fetchWatching, 1000)
-    // return () => clearInterval(watchingInterval)
   }, [])
 
   useEffect(() => {
     fetchFinished()
-    // const finishedInterval = setInterval(fetchFinished, 1000)
-    // return () => clearInterval(finishedInterval)
   }, [])
 
   const fetchWatchlists = async () => {
@@ -596,9 +587,9 @@ const Page = () => {
                         %
                       </p>
                       <div>
-                        <div className="bg-cyan-500/20 h-4 rounded-full overflow-hidden animate-my-glow-combined">
+                        <div className="bg-blue-500/20 h-4 rounded-full overflow-hidden animate-bar-glow">
                           <div
-                            className="bg-cyan-500 flex justify-center items-center"
+                            className="bg-cyan-600 flex justify-center items-center"
                             style={{
                               width: `${Math.round(
                                 (watching.currentEpisode / watching.episodes) *
@@ -693,9 +684,9 @@ const Page = () => {
                         %
                       </p>
                       <div>
-                        <div className="bg-cyan-500/20 h-4 rounded-full overflow-hidden animate-my-glow-combined">
+                        <div className="bg-blue-500/20 h-4 rounded-full overflow-hidden animate-bar-glow">
                           <div
-                            className="bg-cyan-500 flex justify-center items-center"
+                            className="bg-cyan-600 flex justify-center items-center"
                             style={{
                               width: `${Math.round(
                                 (watchlist.currentEpisode /
@@ -792,7 +783,7 @@ const Page = () => {
                         %
                       </p>
                       <div>
-                        <div className="bg-blue-500/20 h-4 rounded-full overflow-hidden animate-my-glow-combined">
+                        <div className="bg-blue-500/20 h-4 rounded-full overflow-hidden animate-bar-glow">
                           <div
                             className="bg-cyan-600 flex justify-center items-center "
                             style={{

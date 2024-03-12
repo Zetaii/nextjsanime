@@ -60,6 +60,13 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
+        "bar-glow": {
+          "0%": { boxShadow: "2px 0 40px 0px rgb(100,200,255)" },
+          "25%": { boxShadow: "2px 0 40px 1px rgb(100,200,255)" },
+          "50%": { boxShadow: "2px 0 40px 2px rgb(100,200,255)" },
+          "75%": { boxShadow: " 2px 0 40px 1px rgb(100,200,255)" },
+          "100%": { boxShadow: "2px 0 40px 0px rgb(100,200,255)" },
+        },
         blob: {
           "0%": { transform: "translate(0px, 0px) scale(1)" },
           "33%": { transform: "translate(30px, -50px) scale(1.1)" },
@@ -126,6 +133,7 @@ const config = {
         "my-glow": "my-glow 1s ease-in-out infinite",
         "my-glow-reverse": "my-glow-reverse 1s ease-in-out infinite",
         "my-glow-combined": "my-glow-combined 2s ease-in-out infinite",
+        "bar-glow": "bar-glow 2s ease-in-out infinite",
         blob: "blob 7s infinite",
       },
 

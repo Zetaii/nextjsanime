@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar"
 import Footer from "../components/Footer"
 import Providers from "../components/Providers"
 import { Toaster } from "sonner"
+import Circles from "../components/Circles"
 
 const dmSans = DM_Sans({ subsets: ["latin"] })
 
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`bg-[#0F1117] ${dmSans.className}`}>
+        <Circles />
         <main className="max-w-7xl mx-auto bg-[#0F1117]">
           <Providers>
             <Navbar />

@@ -54,7 +54,7 @@ var watchingRoutes_1 = __importDefault(require("./app/watchingRoutes"));
 var WatchingItem_1 = __importDefault(require("./app/models/WatchingItem"));
 var FinishedItem_1 = __importDefault(require("./app/models/FinishedItem"));
 dotenv_1.default.config();
-var PORT = 3000 || process.env.PORT;
+var PORT = process.env.PORT || 10000;
 var app = (0, express_1.default)();
 app.use(express_1.default.json());
 var db = mongoose_1.default

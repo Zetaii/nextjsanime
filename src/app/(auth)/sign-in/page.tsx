@@ -74,7 +74,12 @@ const Page = () => {
       <div className="container relative flex pt-20 flex-col items-center justify-center lg:px-0">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col items-center space-y-2 text-center">
-            <Image src="anime.png" alt="anime image" width={100} height={100} />
+            <Image
+              src="/anime.png"
+              alt="anime image"
+              width={200}
+              height={200}
+            />
             <h1 className="text-2xl font-semibold tracking-tight text-white">
               Sign in to your {isSeller ? "seller" : ""} account
             </h1>
@@ -144,9 +149,7 @@ const Page = () => {
               <div
                 aria-hidden="true"
                 className="absolute inset-0 flex items-center"
-              >
-                <span className="w-full border-t" />
-              </div>
+              ></div>
               <div className="relative flex justify-center text-xs uppercase"></div>
             </div>
           </div>

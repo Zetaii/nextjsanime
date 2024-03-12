@@ -42,6 +42,64 @@ const Page = () => {
     [mal_id: number]: string
   }>({})
   const [isLoading, setIsLoading] = useState(false)
+  const [updatedWatchlist, setupdatedWatchlist] = useState<any>([])
+
+  const updateWatchlist = async () => {
+    try {
+      // Fetch updated watchlist data
+      const response = await fetch("/watchlists")
+      if (!response.ok) {
+        throw new Error("Failed to fetch updated watchlist")
+      }
+      const updatedData = await response.json()
+      setWatchlists(updatedData)
+
+      // Update component state with the updated watchlist data
+    } catch (error) {
+      console.error("Error updating watchlist:", error)
+      // Handle error
+    }
+
+    fetchWatchlists()
+  }
+
+  const updateWatching = async () => {
+    try {
+      // Fetch updated watchlist data
+      const response = await fetch("/watching")
+      if (!response.ok) {
+        throw new Error("Failed to fetch updated watchlist")
+      }
+      const updatedData = await response.json()
+      setWatching(updatedData)
+
+      // Update component state with the updated watchlist data
+    } catch (error) {
+      console.error("Error updating watchlist:", error)
+      // Handle error
+    }
+
+    fetchWatching()
+  }
+
+  const updateFinished = async () => {
+    try {
+      // Fetch updated watchlist data
+      const response = await fetch("/watchlists")
+      if (!response.ok) {
+        throw new Error("Failed to fetch updated watchlist")
+      }
+      const updatedData = await response.json()
+      setWatchlists(updatedData)
+
+      // Update component state with the updated watchlist data
+    } catch (error) {
+      console.error("Error updating watchlist:", error)
+      // Handle error
+    }
+
+    fetchFinished()
+  }
 
   const handleEpisodeChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -298,7 +356,9 @@ const Page = () => {
 
       const addedItem = await response.json()
       console.log("Added item to watchlist:", addedItem)
-      await fetchWatchlists
+      fetchFinished()
+      fetchWatchlists()
+      fetchWatching()
       // Update the local state with the added item
       setWatchlists((prevWatchlists) => [...prevWatchlists, addedItem])
     } catch (error) {
@@ -353,6 +413,9 @@ const Page = () => {
     } catch (error) {
       console.error("Error adding item to watchlist:", error)
     }
+    fetchFinished()
+    fetchWatchlists()
+    fetchWatching()
   }
 
   const addToFinished = async (
@@ -402,6 +465,9 @@ const Page = () => {
     } catch (error) {
       console.error("Error adding item to watchlist:", error)
     }
+    fetchFinished()
+    fetchWatchlists()
+    fetchWatching()
   }
 
   const removeFromWatchlist = async (mal_id: number) => {
@@ -473,6 +539,9 @@ const Page = () => {
         search={search}
         setSearch={setSearch}
         animeList={animeList}
+        updateWatchlist={updateWatchlist}
+        updateWatching={updateWatching}
+        updateFinished={updateFinished}
       />
 
       <>
@@ -495,7 +564,7 @@ const Page = () => {
                         alt={watching.title}
                         width={144}
                         height={144}
-                        className="mr-5"
+                        className="mr-5 hover:transform hover:scale-110 transition duration-300 ease-in-out"
                       />
                     </a>
                     <div className="leading-5">
@@ -512,6 +581,8 @@ const Page = () => {
                           placeholder="#"
                           className="border border-gray-300 rounded py-1 pl-1 w-12 text-sm h-5 text-center text-black"
                           key={watching.mal_id}
+                          max={watching.episodes}
+                          min={0}
                         />
                       </p>{" "}
                       {/* Display current episode number */}
@@ -525,9 +596,9 @@ const Page = () => {
                         %
                       </p>
                       <div>
-                        <div className="bg-purple-500/20 h-4 rounded-full overflow-hidden">
+                        <div className="bg-cyan-500/20 h-4 rounded-full overflow-hidden animate-my-glow-combined">
                           <div
-                            className="bg-purple-500 flex justify-center items-center"
+                            className="bg-cyan-500 flex justify-center items-center"
                             style={{
                               width: `${Math.round(
                                 (watching.currentEpisode / watching.episodes) *
@@ -589,7 +660,7 @@ const Page = () => {
                         alt={watchlist.imageUrl}
                         height={144}
                         width={144}
-                        className="mr-5"
+                        className="mr-5 hover:transform hover:scale-110 transition duration-300 ease-in-out"
                       />
                     </a>
                     <div className="leading-5">
@@ -607,6 +678,8 @@ const Page = () => {
                           placeholder="#"
                           className="border border-gray-300 rounded py-1 pl-1 w-12 text-sm h-5 text-center text-black"
                           key={watchlist.mal_id}
+                          max={watchlist.episodes}
+                          min={0}
                         />
                       </p>{" "}
                       {/* Display current episode number */}
@@ -620,9 +693,9 @@ const Page = () => {
                         %
                       </p>
                       <div>
-                        <div className="bg-purple-500/20 h-4 rounded-full overflow-hidden">
+                        <div className="bg-cyan-500/20 h-4 rounded-full overflow-hidden animate-my-glow-combined">
                           <div
-                            className="bg-purple-500 flex justify-center items-center"
+                            className="bg-cyan-500 flex justify-center items-center"
                             style={{
                               width: `${Math.round(
                                 (watchlist.currentEpisode /
@@ -686,7 +759,7 @@ const Page = () => {
                         alt={finished.title}
                         height={144}
                         width={144}
-                        className="mr-5"
+                        className="mr-5 hover:transform hover:scale-110 transition duration-300 ease-in-out"
                       />
                     </a>
                     <div className="leading-5">
@@ -704,6 +777,8 @@ const Page = () => {
                           placeholder="#"
                           className="border border-gray-300 rounded py-1 pl-1 w-12 text-sm h-5 text-center text-black"
                           key={finished.mal_id}
+                          max={finished.episodes}
+                          min={0}
                         />
                       </p>{" "}
                       {/* Display current episode number */}
@@ -717,9 +792,9 @@ const Page = () => {
                         %
                       </p>
                       <div>
-                        <div className="bg-purple-500/20 h-4 rounded-full overflow-hidden">
+                        <div className="bg-blue-500/20 h-4 rounded-full overflow-hidden animate-my-glow-combined">
                           <div
-                            className="bg-purple-500 flex justify-center items-center"
+                            className="bg-cyan-600 flex justify-center items-center "
                             style={{
                               width: `${Math.round(
                                 (finished.currentEpisode / finished.episodes) *

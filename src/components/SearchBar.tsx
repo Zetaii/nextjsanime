@@ -3,11 +3,16 @@ import WatchAnime from "./WatchAnime"
 import { useState } from "react"
 import MaxWidthWrapper from "./MaxWidthWrapper"
 
+interface SearchBarProps {
+  search: string
+  setSearch: (search: string) => void
+  handleSearch: (search: string) => void
+  animeList: any
+  updateWatchlist: (newWatchlist: any) => void
+}
+
 const SearchBar = (props: any) => {
   const [watchlists, setWatchlists] = useState<any>([])
-  const [watching, setWatching] = useState<any>([])
-  const [finished, setFinished] = useState<any>([])
-
   const [isWatchAnimeVisible, setIsWatchAnimeVisible] = React.useState(true)
 
   const handleSubmit = (e: any) => {
@@ -65,6 +70,9 @@ const SearchBar = (props: any) => {
                     handleAddToWatchlist={handleAddToWatchlist}
                     handleAddToFinished={handleAddToFinished}
                     handleAddToWatching={handleAddToWatching}
+                    updateWatchlist={props.updateWatchlist}
+                    updateWatching={props.updateWatching}
+                    updateFinished={props.updateFinished}
                   />
                 </div>
               ))}

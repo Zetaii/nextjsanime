@@ -1,6 +1,7 @@
 "use client"
 
 import MaxWidthWrapper from "@/src/components/MaxWidthWrapper"
+import { MotionDiv } from "@/src/components/Motion"
 import SearchBar from "@/src/components/SearchBar"
 import Image from "next/image"
 import React, { useEffect, useState } from "react"
@@ -521,7 +522,10 @@ const Page = () => {
   let watchingPercentage = watching.map((watching) => {
     return (watching.currentEpisode / watching.episodes) * 100
   })
-
+  const variants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  }
   return (
     <MaxWidthWrapper className="wrapper font-semibold border-2 min-h-[90vh] rounded-md animate-my-glow-combined">
       <SearchBar
@@ -543,95 +547,116 @@ const Page = () => {
           {watching.length === 0 && <p> Nothing here yet </p>}
           <div>
             <ul className="cards">
-              {watching.map((watching) => (
-                <div
-                  key={watching.mal_id}
-                  className="mt-6 text-sm leading-4 hover:bg-slate-600"
+              {watching.map((watching, index) => (
+                <MotionDiv
+                  variants={variants}
+                  initial="hidden"
+                  animate="visible"
+                  transition={{
+                    delay: index * 0.25,
+                    ease: "easeInOut",
+                    duration: 0.5,
+                  }}
+                  viewport={{ amount: 0 }}
+                  className=" rounded "
                 >
-                  <li className="flex">
-                    <a href={watching.url} target="_blank">
-                      <Image
-                        src={watching.imageUrl}
-                        alt={watching.title}
-                        width={144}
-                        height={144}
-                        className="mr-5 hover:transform hover:scale-110 transition duration-300 ease-in-out"
-                      />
-                    </a>
-                    <div className="leading-5">
-                      <h1 className="font-bold text-lg -pt-2 pb-1">
-                        {watching.title}
-                      </h1>
-                      <p className="">
-                        Current Episode: {watching.currentEpisode}{" "}
-                        <input
-                          type="number"
-                          onChange={(e) =>
-                            handleEpisodeChangeWatching(e, watching.mal_id)
-                          }
-                          placeholder="#"
-                          className="border border-gray-300 rounded py-1 pl-1 w-12 text-sm h-5 text-center text-black"
-                          key={watching.mal_id}
-                          max={watching.episodes}
-                          min={0}
+                  <div
+                    key={watching.mal_id}
+                    className="mt-6 text-sm leading-4 hover:bg-slate-600"
+                  >
+                    <li className="flex">
+                      <a href={watching.url} target="_blank">
+                        <Image
+                          src={watching.imageUrl}
+                          alt={watching.title}
+                          width={144}
+                          height={144}
+                          className="mr-5 hover:transform hover:scale-110 transition duration-300 ease-in-out"
                         />
-                      </p>{" "}
-                      {/* Display current episode number */}
-                      <p>Total Episodes: {watching.episodes} </p>
-                      <p>
-                        Percentage Watched:{" "}
-                        {(
-                          (watching.currentEpisode / watching.episodes) *
-                          100
-                        ).toFixed(0)}
-                        %
-                      </p>
-                      <div>
-                        <div className="bg-blue-500/20 h-4 rounded-full overflow-hidden animate-bar-glow">
-                          <div
-                            className="bg-cyan-600 flex justify-center items-center"
-                            style={{
-                              width: `${Math.round(
-                                (watching.currentEpisode / watching.episodes) *
+                      </a>
+                      <div className="leading-5">
+                        <h1 className="font-bold text-lg -pt-2 pb-1">
+                          {watching.title}
+                        </h1>
+                        <p className="">
+                          Current Episode: {watching.currentEpisode}{" "}
+                          <input
+                            type="number"
+                            onChange={(e) =>
+                              handleEpisodeChangeWatching(e, watching.mal_id)
+                            }
+                            placeholder="#"
+                            className="border border-gray-300 rounded py-1 pl-1 w-12 text-sm h-5 text-center text-black"
+                            key={watching.mal_id}
+                            max={watching.episodes}
+                            min={0}
+                          />
+                        </p>{" "}
+                        {/* Display current episode number */}
+                        <p>Total Episodes: {watching.episodes} </p>
+                        <p>
+                          Percentage Watched:{" "}
+                          {(
+                            (watching.currentEpisode / watching.episodes) *
+                            100
+                          ).toFixed(0)}
+                          %
+                        </p>
+                        <div>
+                          <div className="bg-blue-500/20 h-4 rounded-full overflow-hidden animate-bar-glow">
+                            <div
+                              className="bg-cyan-600 flex justify-center items-center"
+                              style={{
+                                width: `${Math.round(
+                                  (watching.currentEpisode /
+                                    watching.episodes) *
+                                    100
+                                )}%`,
+                              }}
+                            >
+                              <div className="pl-8">
+                                {(
+                                  (watching.currentEpisode /
+                                    watching.episodes) *
                                   100
-                              )}%`,
-                            }}
-                          >
-                            <div className="pl-8">
-                              {(
-                                (watching.currentEpisode / watching.episodes) *
-                                100
-                              ).toFixed(0)}
-                              %
+                                ).toFixed(0)}
+                                %
+                              </div>
                             </div>
                           </div>
                         </div>
+                        <div className="relative">
+                          <div className="absolute mt-[6px]  inset-0 bg-red-600 h-8 w-[164px] z-1 rounded blur-sm"></div>
+                          <button
+                            className=" relative bg-red-500 rounded-md p-1 hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
+                            onClick={() => removeFromWatching(watching.mal_id)}
+                          >
+                            Remove from Watching
+                          </button>
+                          <div className="absolute mt-[7px] ml-[168px] inset-0 bg-yellow-600 h-8 w-[130px] z-1 rounded blur-sm"></div>
+                          <button
+                            className="relative bg-yellow-600  rounded-md p-1  hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
+                            onClick={() => addToWatchlist(watching, "watching")}
+                          >
+                            Add to Watchlist
+                          </button>
+                          <div className="absolute mt-[7px] ml-[298px] inset-0 bg-emerald-600 h-8 w-[120px] z-1 rounded blur-sm "></div>
+                          <button
+                            className="relative bg-emerald-700 rounded-md p-1  hover:bg-slate-800 hover:text-white mt-2 glow-on-hover  "
+                            onClick={() => addToFinished(watching, "watching")}
+                          >
+                            Add to Finished
+                          </button>
+                        </div>
                       </div>
-                      <button
-                        className="bg-red-500 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
-                        onClick={() => removeFromWatching(watching.mal_id)}
-                      >
-                        Remove from Watching
-                      </button>
-                      <button
-                        className="bg-yellow-600  rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
-                        onClick={() => addToWatchlist(watching, "watching")}
-                      >
-                        Add to Watchlist
-                      </button>
-                      <button
-                        className="bg-emerald-700 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 glow-on-hover  "
-                        onClick={() => addToFinished(watching, "watching")}
-                      >
-                        Add to Finished
-                      </button>
-                    </div>
-                  </li>
-                </div>
+                    </li>
+                  </div>
+                </MotionDiv>
               ))}
             </ul>
           </div>
         </div>
+
         <div className="text-white -ml-10 mt-5 mb-5 min-h-52">
           <h1 className="font-bold text-2xl -pt-2 pb-1 border-b-2 title ">
             Want to Watch
@@ -639,191 +664,235 @@ const Page = () => {
           {watchlists.length === 0 && <p>Nothing here yet</p>}
           <div>
             <ul className="cards">
-              {watchlists.map((watchlist) => (
-                <div
-                  key={watchlist.mal_id}
-                  className="mt-6 text-sm leading-4 hover:bg-slate-600"
+              {watchlists.map((watchlist, index) => (
+                <MotionDiv
+                  variants={variants}
+                  initial="hidden"
+                  animate="visible"
+                  transition={{
+                    delay: index * 0.25,
+                    ease: "easeInOut",
+                    duration: 0.5,
+                  }}
+                  viewport={{ amount: 0 }}
+                  className=" rounded "
                 >
-                  <li className="flex">
-                    <a href={watchlist.url} target="_blank">
-                      <Image
-                        src={watchlist.imageUrl}
-                        alt={watchlist.imageUrl}
-                        height={144}
-                        width={144}
-                        className="mr-5 hover:transform hover:scale-110 transition duration-300 ease-in-out"
-                      />
-                    </a>
-                    <div className="leading-5">
-                      <h1 className="font-bold text-lg -pt-2 pb-1">
-                        {watchlist.title}
-                      </h1>
-                      <p>
-                        Current Episode: {watchlist.currentEpisode}{" "}
-                        <input
-                          type="number"
-                          value={episodeNumbers[watchlist.mal_id] || ""}
-                          onChange={(e) =>
-                            handleEpisodeChange(e, watchlist.mal_id)
-                          }
-                          placeholder="#"
-                          className="border border-gray-300 rounded py-1 pl-1 w-12 text-sm h-5 text-center text-black"
-                          key={watchlist.mal_id}
-                          max={watchlist.episodes}
-                          min={0}
+                  <div
+                    key={watchlist.mal_id}
+                    className="mt-6 text-sm leading-4 hover:bg-slate-600"
+                  >
+                    <li className="flex">
+                      <a href={watchlist.url} target="_blank">
+                        <Image
+                          src={watchlist.imageUrl}
+                          alt={watchlist.imageUrl}
+                          height={144}
+                          width={144}
+                          className="mr-5 hover:transform hover:scale-110 transition duration-300 ease-in-out"
                         />
-                      </p>{" "}
-                      {/* Display current episode number */}
-                      <p>Total Episodes: {watchlist.episodes} </p>
-                      <p>
-                        Percentage Watched:{" "}
-                        {(
-                          (watchlist.currentEpisode / watchlist.episodes) *
-                          100
-                        ).toFixed(0)}
-                        %
-                      </p>
-                      <div>
-                        <div className="bg-blue-500/20 h-4 rounded-full overflow-hidden animate-bar-glow">
-                          <div
-                            className="bg-cyan-600 flex justify-center items-center"
-                            style={{
-                              width: `${Math.round(
-                                (watchlist.currentEpisode /
-                                  watchlist.episodes) *
+                      </a>
+                      <div className="leading-5">
+                        <h1 className="font-bold text-lg -pt-2 pb-1">
+                          {watchlist.title}
+                        </h1>
+                        <p>
+                          Current Episode: {watchlist.currentEpisode}{" "}
+                          <input
+                            type="number"
+                            value={episodeNumbers[watchlist.mal_id] || ""}
+                            onChange={(e) =>
+                              handleEpisodeChange(e, watchlist.mal_id)
+                            }
+                            placeholder="#"
+                            className="border border-gray-300 rounded py-1 pl-1 w-12 text-sm h-5 text-center text-black"
+                            key={watchlist.mal_id}
+                            max={watchlist.episodes}
+                            min={0}
+                          />
+                        </p>{" "}
+                        {/* Display current episode number */}
+                        <p>Total Episodes: {watchlist.episodes} </p>
+                        <p>
+                          Percentage Watched:{" "}
+                          {(
+                            (watchlist.currentEpisode / watchlist.episodes) *
+                            100
+                          ).toFixed(0)}
+                          %
+                        </p>
+                        <div>
+                          <div className="bg-blue-500/20 h-4 rounded-full overflow-hidden animate-bar-glow">
+                            <div
+                              className="bg-cyan-600 flex justify-center items-center"
+                              style={{
+                                width: `${Math.round(
+                                  (watchlist.currentEpisode /
+                                    watchlist.episodes) *
+                                    100
+                                )}%`,
+                              }}
+                            >
+                              <div className="pl-8">
+                                {(
+                                  (watchlist.currentEpisode /
+                                    watchlist.episodes) *
                                   100
-                              )}%`,
-                            }}
-                          >
-                            <div className="pl-8">
-                              {(
-                                (watchlist.currentEpisode /
-                                  watchlist.episodes) *
-                                100
-                              ).toFixed(0)}
-                              %
+                                ).toFixed(0)}
+                                %
+                              </div>
                             </div>
                           </div>
                         </div>
+                        <div className="relative">
+                          <div className="absolute mt-[6px] -ml-1 inset-0 bg-red-600 h-8 w-[176px] z-1 rounded blur-sm"></div>
+                          <button
+                            className="relative bg-red-500 rounded-md p-1  hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
+                            onClick={() =>
+                              removeFromWatchlist(watchlist.mal_id)
+                            }
+                          >
+                            Remove from Watchlist
+                          </button>
+                          <div className="absolute mt-[6px] ml-[164px] inset-0 bg-blue-400 h-8 w-[134px] z-1 rounded blur-sm"></div>
+                          <button
+                            className="relative bg-blue-400 rounded-md p-1  hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
+                            onClick={() =>
+                              addToWatching(watchlist, "watchlist")
+                            }
+                          >
+                            Add to Watching
+                          </button>
+                          <div className="absolute mt-[6px] ml-[296px] inset-0 bg-emerald-600 h-8 w-[124px] z-1 rounded blur-sm "></div>
+                          <button
+                            className="relative bg-emerald-700 rounded-md p-1  hover:bg-slate-800 hover:text-white mt-2 glow-on-hover"
+                            onClick={() =>
+                              addToFinished(watchlist, "watchlist")
+                            }
+                          >
+                            Add to Finished
+                          </button>
+                        </div>
                       </div>
-                      <button
-                        className="bg-red-500 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
-                        onClick={() => removeFromWatchlist(watchlist.mal_id)}
-                      >
-                        Remove from Watchlist
-                      </button>
-                      <button
-                        className="bg-blue-400 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
-                        onClick={() => addToWatching(watchlist, "watchlist")}
-                      >
-                        Add to Watching
-                      </button>
-                      <button
-                        className="bg-emerald-700 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 glow-on-hover"
-                        onClick={() => addToFinished(watchlist, "watchlist")}
-                      >
-                        Add to Finished
-                      </button>
-                    </div>
-                  </li>
-                </div>
+                    </li>
+                  </div>
+                </MotionDiv>
               ))}
             </ul>
           </div>
         </div>
-        <div className="text-white -ml-10 mb-5 pb-20 min-h-52">
+        <div className="text-white -ml-10 mb-5 pb-30 min-h-52">
           <h1 className="font-bold text-2xl -pt-2  border-b-2 title">
             Finished
           </h1>
           {finished.length === 0 && <p>Nothing here yet</p>}
           <div>
             <ul className="cards">
-              {finished.map((finished) => (
-                <div
-                  key={finished.mal_id}
-                  className="mt-6 text-sm leading-4 hover:bg-slate-600"
+              {finished.map((finished, index) => (
+                <MotionDiv
+                  variants={variants}
+                  initial="hidden"
+                  animate="visible"
+                  transition={{
+                    delay: index * 0.25,
+                    ease: "easeInOut",
+                    duration: 0.5,
+                  }}
+                  viewport={{ amount: 0 }}
+                  className=" rounded "
                 >
-                  <li className="flex">
-                    <a href={finished.url} target="_blank">
-                      <Image
-                        src={finished.imageUrl}
-                        alt={finished.title}
-                        height={144}
-                        width={144}
-                        className="mr-5 hover:transform hover:scale-110 transition duration-300 ease-in-out"
-                      />
-                    </a>
-                    <div className="leading-5">
-                      <h1 className="font-bold text-lg -pt-2 pb-1">
-                        {finished.title}
-                      </h1>
-                      <p>
-                        Current Episode: {finished.currentEpisode}{" "}
-                        <input
-                          type="number"
-                          value={episodeNumbers[finished.mal_id] || ""}
-                          onChange={(e) =>
-                            handleEpisodeChangeFinished(e, finished.mal_id)
-                          }
-                          placeholder="#"
-                          className="border border-gray-300 rounded py-1 pl-1 w-12 text-sm h-5 text-center text-black"
-                          key={finished.mal_id}
-                          max={finished.episodes}
-                          min={0}
+                  <div
+                    key={finished.mal_id}
+                    className="mt-6 text-sm leading-4 hover:bg-slate-600"
+                  >
+                    <li className="flex">
+                      <a href={finished.url} target="_blank">
+                        <Image
+                          src={finished.imageUrl}
+                          alt={finished.title}
+                          height={144}
+                          width={144}
+                          className="mr-5 hover:transform hover:scale-110 transition duration-300 ease-in-out"
                         />
-                      </p>{" "}
-                      {/* Display current episode number */}
-                      <p>Total Episodes: {finished.episodes} </p>
-                      <p>
-                        Percentage Watched:{" "}
-                        {(
-                          (finished.currentEpisode / finished.episodes) *
-                          100
-                        ).toFixed(0)}
-                        %
-                      </p>
-                      <div>
-                        <div className="bg-blue-500/20 h-4 rounded-full overflow-hidden animate-bar-glow">
-                          <div
-                            className="bg-cyan-600 flex justify-center items-center "
-                            style={{
-                              width: `${Math.round(
-                                (finished.currentEpisode / finished.episodes) *
+                      </a>
+                      <div className="leading-5">
+                        <h1 className="font-bold text-lg -pt-2 pb-1">
+                          {finished.title}
+                        </h1>
+                        <p>
+                          Current Episode: {finished.currentEpisode}{" "}
+                          <input
+                            type="number"
+                            value={episodeNumbers[finished.mal_id] || ""}
+                            onChange={(e) =>
+                              handleEpisodeChangeFinished(e, finished.mal_id)
+                            }
+                            placeholder="#"
+                            className="border border-gray-300 rounded py-1 pl-1 w-12 text-sm h-5 text-center text-black"
+                            key={finished.mal_id}
+                            max={finished.episodes}
+                            min={0}
+                          />
+                        </p>{" "}
+                        {/* Display current episode number */}
+                        <p>Total Episodes: {finished.episodes} </p>
+                        <p>
+                          Percentage Watched:{" "}
+                          {(
+                            (finished.currentEpisode / finished.episodes) *
+                            100
+                          ).toFixed(0)}
+                          %
+                        </p>
+                        <div>
+                          <div className="bg-blue-500/20 h-4 rounded-full overflow-hidden animate-bar-glow">
+                            <div
+                              className="bg-cyan-600 flex justify-center items-center "
+                              style={{
+                                width: `${Math.round(
+                                  (finished.currentEpisode /
+                                    finished.episodes) *
+                                    100
+                                )}%`,
+                              }}
+                            >
+                              <div className="pl-8">
+                                {(
+                                  (finished.currentEpisode /
+                                    finished.episodes) *
                                   100
-                              )}%`,
-                            }}
-                          >
-                            <div className="pl-8">
-                              {(
-                                (finished.currentEpisode / finished.episodes) *
-                                100
-                              ).toFixed(0)}
-                              %
+                                ).toFixed(0)}
+                                %
+                              </div>
                             </div>
                           </div>
                         </div>
+                        <div className="relative">
+                          <div className="absolute mt-[6px] -ml-1 inset-0 bg-red-600 h-8 w-[172px] z-1 rounded blur"></div>
+                          <button
+                            className="relative bg-red-500 rounded-md p-1  hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
+                            onClick={() => removeFromFinished(finished.mal_id)}
+                          >
+                            Remove from Finished
+                          </button>
+                          <div className="absolute mt-[6px] ml-[162px] inset-0 bg-blue-400 h-8 w-[134px] z-1 rounded blur"></div>
+                          <button
+                            className="relative bg-blue-400 rounded-md p-1  hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
+                            onClick={() => addToWatching(finished, "finished")}
+                          >
+                            Add to Watching
+                          </button>
+                          <div className="absolute mt-[6px] ml-[290px] inset-0 bg-yellow-600 h-8 w-[124px] z-1 rounded blur "></div>
+                          <button
+                            className="relative bg-yellow-600 rounded-md p-1  hover:bg-slate-800 hover:text-white mt-2 glow-on-hover"
+                            onClick={() => addToWatchlist(finished, "finished")}
+                          >
+                            Add to Watchlist
+                          </button>
+                        </div>
                       </div>
-                      <button
-                        className="bg-red-500 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
-                        onClick={() => removeFromFinished(finished.mal_id)}
-                      >
-                        Remove from Finished
-                      </button>
-                      <button
-                        className="bg-blue-400 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
-                        onClick={() => addToWatching(finished, "finished")}
-                      >
-                        Add to Watching
-                      </button>
-                      <button
-                        className="bg-yellow-600 rounded-md p-1 text-black hover:bg-slate-800 hover:text-white mt-2 glow-on-hover"
-                        onClick={() => addToWatchlist(finished, "finished")}
-                      >
-                        Add to Watchlist
-                      </button>
-                    </div>
-                  </li>
-                </div>
+                    </li>
+                  </div>
+                </MotionDiv>
               ))}
             </ul>
           </div>

@@ -10,6 +10,8 @@ async function Home() {
   return (
     <MaxWidthWrapper>
       <main className="sm:p-16 py-16 px-8 flex flex-col gap-10">
+        <div className="absolute top-40 left-[700px] w-32 h-32 bg-gray-400 opacity-10 rounded-full filter blur-xl animate-blob animation-delay-3000"></div>
+        <div className="absolute top-[700px] right-[700px] w-32 h-32 bg-gray-400 opacity-10 rounded-full filter blur-xl animate-blob animation-delay-5000"></div>
         <Hero />
         <h2 className="text-3xl text-white font-bold">Explore Anime</h2>
 

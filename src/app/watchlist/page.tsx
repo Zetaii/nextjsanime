@@ -549,6 +549,7 @@ const Page = () => {
             <ul className="cards">
               {watching.map((watching, index) => (
                 <MotionDiv
+                  key={index}
                   variants={variants}
                   initial="hidden"
                   animate="visible"
@@ -666,6 +667,7 @@ const Page = () => {
             <ul className="cards">
               {watchlists.map((watchlist, index) => (
                 <MotionDiv
+                  key={index}
                   variants={variants}
                   initial="hidden"
                   animate="visible"
@@ -789,6 +791,7 @@ const Page = () => {
             <ul className="cards">
               {finished.map((finished, index) => (
                 <MotionDiv
+                  key={index}
                   variants={variants}
                   initial="hidden"
                   animate="visible"

@@ -20,7 +20,7 @@ export const TextReveal4 = ({ children, width = "fit-content" }: Props) => {
       mainControls.start("visible")
       slideControls.start("visible")
     }
-  }, [isInView])
+  }, [isInView, mainControls, slideControls])
 
   return (
     <div ref={ref} className="relative  overflow-hidden">

@@ -4,21 +4,23 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
+import { auth } from "@/src/firebase"
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth"
 
-import { toast } from "sonner"
-import { ZodError } from "zod"
-import { useRouter } from "next/navigation"
+import { Button, buttonVariants } from "@/src/components/ui/button"
+import { Input } from "@/src/components/ui/input"
+import { Label } from "@/src/components/ui/label"
+import { cn } from "@/src/lib/utils"
 import {
   AuthCredentialsValidator,
   TAuthCredentialsValidator,
 } from "@/src/lib/validators/account-credentials-validator"
 import { trpc } from "@/src/trpc/client"
-import { Button, buttonVariants } from "@/src/components/ui/button"
-import { Label } from "@/src/components/ui/label"
-import { Input } from "@/src/components/ui/input"
-import { cn } from "@/src/lib/utils"
-import { Icons } from "@/src/components/Icons"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+import { ZodError } from "zod"
+import { useState } from "react"
 
 const Page = () => {
   const {
@@ -28,6 +30,23 @@ const Page = () => {
   } = useForm<TAuthCredentialsValidator>({
     resolver: zodResolver(AuthCredentialsValidator),
   })
+
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  const [createUserWithEmailAndPasword] =
+    useCreateUserWithEmailAndPassword(auth)
+
+  const handleSignUp = async () => {
+    try {
+      const res = await createUserWithEmailAndPasword(email, password)
+      console.log(res)
+      setEmail("")
+      setPassword("")
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const router = useRouter()
 
@@ -53,9 +72,9 @@ const Page = () => {
     },
   })
 
-  const onSubmit = ({ email, password }: TAuthCredentialsValidator) => {
-    mutate({ email, password })
-  }
+  // const onSubmit = ({ email, password }: TAuthCredentialsValidator) => {
+  //   mutate({ email, password })
+  // }
 
   return (
     <>
@@ -85,7 +104,7 @@ const Page = () => {
           </div>
 
           <div className="grid gap-6">
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSignUp}>
               <div className="grid gap-2">
                 <div className="grid gap-1 py-2">
                   <Label htmlFor="email" className="text-white">
@@ -124,7 +143,7 @@ const Page = () => {
                   )}
                 </div>
 
-                <Button>Sign up</Button>
+                <Button onClick={handleSignUp}>Sign up</Button>
               </div>
             </form>
           </div>

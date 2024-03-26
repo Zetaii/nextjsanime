@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import { getServerSideUser } from "../lib/payload-utils"
 import { cookies } from "next/headers"
@@ -8,10 +10,11 @@ import { motion } from "framer-motion"
 import { MotionLink } from "./MotionLink"
 import { MotionDiv } from "./Motion"
 import { MotionNav } from "./MotionNav"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { auth } from "@/src/firebase"
 
-const Navbar = async () => {
-  const nextCookies = cookies()
-  const { user } = await getServerSideUser(nextCookies)
+const Navbar = () => {
+  const [user] = useAuthState(auth)
 
   return (
     <>
@@ -123,7 +126,7 @@ const Navbar = async () => {
           </MotionDiv>
           <div className="flex items-center gap-6">
             {user ? (
-              <UserAccountNav user={{ ...user, collection: "" }} />
+              user.email
             ) : (
               <Link
                 href="/sign-in"

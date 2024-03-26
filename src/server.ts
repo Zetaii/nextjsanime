@@ -37,6 +37,17 @@ app.use("/watchlists", watchlistRouter)
 app.use("/watching", watchingRouter)
 app.use("/finished", finishedRouter)
 
+app.get("/watchlist", async (req, res) => {
+  try {
+    const { userEmail } = req.query
+    const watchlistItems = await WatchlistModel.find({ email: userEmail })
+    res.json(watchlistItems)
+  } catch (error) {
+    console.error("Error fetching watchlist items:", error)
+    res.status(500).json({ error: "Internal server error" })
+  }
+})
+
 app.post("/add-to-watchlist", async (req, res) => {
   try {
     // Extract anime data from request body

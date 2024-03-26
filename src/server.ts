@@ -40,7 +40,7 @@ app.use("/finished", finishedRouter)
 app.post("/add-to-watchlist", async (req, res) => {
   try {
     // Extract anime data from request body
-    const { title } = req.body
+    const { title, userEmail } = req.body
 
     // Fetch anime data based on the title
     const response = await fetch(
@@ -59,6 +59,7 @@ app.post("/add-to-watchlist", async (req, res) => {
       episodes: anime.episodes,
       mal_id: anime.mal_id,
       url: anime.url,
+      email: userEmail,
       // Add more fields as needed
     }
 

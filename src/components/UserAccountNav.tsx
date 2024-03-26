@@ -1,7 +1,5 @@
 "use client"
 
-import { User } from "payload/dist/auth"
-import { useAuth } from "../hooks/use-auth"
 import { Button } from "./ui/button"
 
 import Link from "next/link"
@@ -13,10 +11,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { User } from "firebase/auth"
+import { signOut } from "firebase/auth"
+
+import { useAuthState } from "react-firebase-hooks/auth"
+import { auth } from "../firebase"
 
 const UserAccountNav = ({ user }: { user: User }) => {
-  const { signOut } = useAuth()
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="overflow-visible">
@@ -38,7 +39,13 @@ const UserAccountNav = ({ user }: { user: User }) => {
           <Link href="/watchlist">Watchlist</Link>
         </DropdownMenuItem>
 
-        <DropdownMenuItem onClick={signOut} className="cursor-pointer">
+        <DropdownMenuItem
+          onClick={() => {
+            signOut(auth)
+            sessionStorage.removeItem("user")
+          }}
+          className="cursor-pointer"
+        >
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -26,6 +26,9 @@ const WatchlistItemSchema = new Schema({
   url: {
     type: String,
   },
+  email: {
+    type: String,
+  },
 })
 
 const WatchlistModel = mongoose.model("watchlistitems", WatchlistItemSchema)

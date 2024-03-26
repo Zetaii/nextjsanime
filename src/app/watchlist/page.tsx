@@ -5,6 +5,9 @@ import { MotionDiv } from "@/src/components/Motion"
 import SearchBar from "@/src/components/SearchBar"
 import Image from "next/image"
 import React, { useEffect, useState } from "react"
+import { auth } from "@/src/firebase"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { User } from "firebase/auth"
 
 interface Watchlist {
   title: string
@@ -44,6 +47,7 @@ const Page = () => {
   }>({})
   const [isLoading, setIsLoading] = useState(false)
   const [updatedWatchlist, setupdatedWatchlist] = useState<any>([])
+  const [user] = useAuthState(auth)
 
   const updateWatchlist = async () => {
     try {
@@ -309,7 +313,8 @@ const Page = () => {
 
   const addToWatchlist = async (
     anime: Watchlist | Watching | Finished,
-    section: string
+    section: string,
+    userEmail: string
   ) => {
     try {
       let removeFromSectionEndpoint = ""
@@ -324,6 +329,8 @@ const Page = () => {
           console.error("Invalid section")
           return
       }
+      const animeWithUserId = { ...anime, userEmail: userEmail } // Include the userEmail in the data
+
       // Remove the anime from the corresponding section
       const removeResponse = await fetch(removeFromSectionEndpoint, {
         method: "DELETE",
@@ -339,7 +346,7 @@ const Page = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(anime),
+        body: JSON.stringify(animeWithUserId), // Send the updated data including userEmail
       })
 
       if (!response.ok) {
@@ -637,7 +644,15 @@ const Page = () => {
                           <div className="absolute mt-[7px] ml-[168px] inset-0 bg-yellow-600 h-8 w-[130px] z-1 rounded blur-sm"></div>
                           <button
                             className="relative bg-yellow-600  rounded-md p-1  hover:bg-slate-800 hover:text-white mt-2 mr-2 glow-on-hover"
-                            onClick={() => addToWatchlist(watching, "watching")}
+                            onClick={() =>
+                              user && user.email
+                                ? addToWatchlist(
+                                    watching,
+                                    "watching",
+                                    user.email
+                                  )
+                                : null
+                            }
                           >
                             Add to Watchlist
                           </button>
@@ -885,9 +900,16 @@ const Page = () => {
                             Add to Watching
                           </button>
                           <div className="absolute mt-[6px] ml-[290px] inset-0 bg-yellow-600 h-8 w-[124px] z-1 rounded blur "></div>
+
                           <button
                             className="relative bg-yellow-600 rounded-md p-1  hover:bg-slate-800 hover:text-white mt-2 glow-on-hover"
-                            onClick={() => addToWatchlist(finished, "finished")}
+                            onClick={() =>
+                              addToWatchlist(
+                                finished,
+                                "finished",
+                                user?.email ?? ""
+                              )
+                            }
                           >
                             Add to Watchlist
                           </button>

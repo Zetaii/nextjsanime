@@ -1,13 +1,11 @@
 "use client"
 
 import Link from "next/link"
-import { getServerSideUser } from "../lib/payload-utils"
-import { cookies } from "next/headers"
+
 import { buttonVariants } from "./ui/button"
 import UserAccountNav from "./UserAccountNav"
 import Image from "next/image"
-import { motion } from "framer-motion"
-import { MotionLink } from "./MotionLink"
+
 import { MotionDiv } from "./Motion"
 import { MotionNav } from "./MotionNav"
 import { useAuthState } from "react-firebase-hooks/auth"
@@ -18,7 +16,6 @@ const Navbar = () => {
 
   return (
     <>
-      (
       <MotionNav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: -10, opacity: 1 }}
@@ -126,21 +123,20 @@ const Navbar = () => {
           </MotionDiv>
           <div className="flex items-center gap-6">
             {user ? (
-              user.email
+              <UserAccountNav user={user} />
             ) : (
               <Link
-                href="/sign-in"
-                className={`${buttonVariants({
+                href="/sign-up"
+                className={buttonVariants({
                   variant: "ghost",
-                })} text-xl  hover:text-black`}
+                })}
               >
-                Sign in{" "}
+                Create account
               </Link>
             )}
           </div>
         </nav>
       </MotionNav>
-      )
     </>
   )
 }
